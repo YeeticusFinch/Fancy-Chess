@@ -38,7 +38,7 @@ public class MainCamera : MonoBehaviour
             if (Physics.Raycast(ray, out hit, 100))
             {
                 Debug.Log(hit.transform.gameObject.name);
-                hit.transform.gameObject.GetComponent<Tile>().Click();
+                hit.transform.gameObject.GetComponent<Tile>().Click();  
             }
         }
     }

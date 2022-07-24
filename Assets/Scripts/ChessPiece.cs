@@ -13,80 +13,87 @@ public class ChessPiece : MonoBehaviour
     public bool didDoubleMove = false;  // for pawns, to see if they can be hit by en-passent
     public bool hasMoved = false;
     public bool vip = false;
+    public List<int> mirror = new List<int>();
+    public int timesMirrored = 0;
+    public bool arrayToMirrored = false;
 
-    public static Move[] KING = { // check and checkmate needs to be hardcoded
-        new Move(1),   // left right up down
-        new Move(0, 1), // diagonals
+    public static Dictionary<string, Move[]> moveSets = new Dictionary<string, Move[]> {
+        ["king"] = new Move[] { // check and checkmate needs to be hardcoded
+            new Move(1),   // left right up down
+            new Move(0, 1), // diagonals
+        },
+
+        ["queen"] = new Move[] {
+            new Move(-1),
+            new Move(0, -1),
+        },
+
+        ["bishop"] = new Move[] {
+            new Move(0, -1) // only diagonals
+        },
+
+        ["knight"] = new Move[] { // only catch is the diagonal needs to have a component vector in the same direction as the lateral (prob needs to be hardcoded)
+            new Move(1, 1, false, true, true) // move one space laterally, and one space diagonally, must move 1 forward, can jump over pieces
+        },
+
+        ["rook"] = new Move[] {
+            new Move(-1) // move laterally
+        },
+
+        ["pawn"] = new Move[] { // hardest one, a lot probably needs to be hardcoded
+            new Move(1, 0, true, false, false, false), // moves forward, can't consume
+            new Move(0, 1, true, false, false, true, true), // moves diagonally to consume, can only be used to consume
+            new Move(2, 0, true, true, false, false, false, true) // moves forward twice as a first move
+        },
+
+        ["unicorn"] = new Move[] {
+            new Move(2, 0, false, true, true),
+            new Move(0, 1, false, true, true)
+        },
+
+        ["elephant"] = new Move[] {
+            new Move(1, 0, false, false, true),
+            new Move(0, 2, false, false, true)
+        },
+
+        ["buffalo"] = new Move[] { // same hard coding as the knight, basically a super knight
+            new Move(1, 1, false, true, true),
+            new Move(1, 2, false, true, true),
+            new Move(2, 1, false, true, true),
+        },
+
+        ["princess"] = new Move[] { // combines my two fav pieces from traditional chess (knight and bishop)
+             new Move(1, 1, false, true, true), // knight moves (with jumping)
+             new Move(0, -1) // bishop moves (no jumping)
+        },
+
+        ["empress"] = new Move[] {
+            new Move(1, 1, false, true, true), // knight moves (with jumping)
+            new Move(-1) // rook moves
+        },
+
+        ["dabbaba"] = new Move[] {
+            new Move(2, 0, false, true, true) // jumps to spaces laterally
+        },
+
+        ["ferz"] = new Move[] {
+            new Move(0, 1) // can only move one space diagonally
+        },
+
+        ["alpil"] = new Move[] {
+            new Move(0, 2, false, true, true) // jumps two spaces diagonally
+        },
+
+        ["camel"] = new Move[] {
+            new Move(2, 1, false, true, true) // long-jumping knight
+        },
+
+        ["zebra"] = new Move[] {
+            new Move(1, 2, false, true, true) // another long-jumping knight
+        },
     };
 
-    public static Move[] QUEEN = {
-        new Move(-1),
-        new Move(0, -1),
-    };
-
-    public static Move[] BISHOP = {
-        new Move(0, -1) // only diagonals
-    };
-
-    public static Move[] KNIGHT = { // only catch is the diagonal needs to have a component vector in the same direction as the lateral (prob needs to be hardcoded)
-        new Move(1, 1, false, true, true) // move one space laterally, and one space diagonally, must move 1 forward, can jump over pieces
-    };
-
-    public static Move[] ROOK = {
-        new Move(-1) // move laterally
-    };
-
-    public static Move[] PAWN = { // hardest one, a lot probably needs to be hardcoded
-        new Move(1, 0, true, false, false, false), // moves forward, can't consume
-        new Move(0, 1, true, false, false, true, true), // moves diagonally to consume, can only be used to consume
-        new Move(2, 0, true, true, false, false, false, true) // moves forward twice as a first move
-    };
-
-    public static Move[] UNICORN = {
-        new Move(2, 0, false, true, true),
-        new Move(0, 1, false, true, true)
-    };
-
-    public static Move[] ELEPHANT = {
-        new Move(1, 0, false, false, true),
-        new Move(0, 2, false, false, true)
-    };
-
-    public static Move[] BUFFALO = { // same hard coding as the knight, basically a super knight
-        new Move(1, 1, false, true, true),
-        new Move(1, 2, false, true, true),
-        new Move(2, 1, false, true, true),
-    };
-
-    public static Move[] PRINCESS = { // combines my two fav pieces from traditional chess (knight and bishop)
-         new Move(1, 1, false, true, true), // knight moves (with jumping)
-         new Move(0, -1) // bishop moves (no jumping)
-    };
-
-    public static Move[] EMPRESS = {
-        new Move(1, 1, false, true, true), // knight moves (with jumping)
-        new Move(-1) // rook moves
-    };
-
-    public static Move[] DABBABA = {
-        new Move(2, 0, false, true, true) // jumps to spaces laterally
-    };
-
-    public static Move[] FERZ = {
-        new Move(0, 1) // can only move one space diagonally
-    };
-
-    public static Move[] ALPIL = {
-        new Move(0, 2, false, true, true) // jumps two spaces diagonally
-    };
-
-    public static Move[] CAMEL = {
-        new Move(2, 1, false, true, true) // long-jumping knight
-    };
-
-    public static Move[] ZEBRA = {
-        new Move(1, 2, false, true, true) // another long-jumping knight
-    };
+    public List<string> useMoveSets = new List<string>();
     
     [System.Serializable]
     public struct Move
@@ -117,6 +124,29 @@ public class ChessPiece : MonoBehaviour
     
     void Start()
     {
+        if (timesMirrored > 0)
+        {
+            if (!arrayToMirrored)
+            location[mirror[timesMirrored-1]] = board.size[mirror[timesMirrored-1]] - 1 - location[mirror[timesMirrored-1]];
+        }
+        if (mirror.Count > timesMirrored)
+        {
+            timesMirrored++;
+            if (arrayToMirrored) {
+                for (int i = 1; i < board.size[mirror[timesMirrored - 1]]; i++) {
+                    GameObject newPiece = Instantiate(gameObject);
+                    newPiece.GetComponent<ChessPiece>().location[mirror[timesMirrored - 1]]+=i;
+                }
+            }
+            else
+                Instantiate(gameObject);
+        }
+        if (useMoveSets.Count > 0)
+            foreach (string str in useMoveSets)
+                if (moveSets.ContainsKey(str))
+                    foreach (Move m in moveSets[str])
+                        moves.Add(m);
+
         while (location.Count < board.size.Count)
             location.Add(0);
         while (location.Count > board.size.Count)
@@ -150,7 +180,10 @@ public class ChessPiece : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+            if (board.whiteTurn && Mathf.Abs(Mathf.Abs(transform.localEulerAngles.y) - 180) > 2)
+                transform.localEulerAngles += Vector3.forward * Mathf.Min(180 - transform.localEulerAngles.z, 2);
+            else if (!board.whiteTurn && Mathf.Abs(transform.localEulerAngles.y) > 2)
+                transform.localEulerAngles -= Vector3.forward * Mathf.Min(transform.localEulerAngles.z, 2);
     }
 
     IEnumerator Place()
