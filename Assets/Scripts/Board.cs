@@ -24,6 +24,7 @@ public class Board : MonoBehaviour
     public List<List<int>> diagonals = null;
 
     public bool whiteTurn = true;
+    public bool canMove = true;
 
     //public GameMaster gameMaster;
 
@@ -32,6 +33,14 @@ public class Board : MonoBehaviour
     {
         InitBoard();
         InitDirections();
+    }
+
+    public ChessPiece PieceAt(List<int> loc)
+    {
+        string str = CarlMath.ListAsString(loc);
+        if (!squares.ContainsKey(str) || squares[str] == null)
+            return null;
+        return squares[str].piece;
     }
 
     void InitBoard()
@@ -63,6 +72,7 @@ public class Board : MonoBehaviour
                 newTile.GetComponent<Tile>().SetColor(colorB);
             }
             newTile.GetComponent<Tile>().SetLocation(new List<int>(iter));
+            newTile.GetComponent<Tile>().board = this;
             return;
         }
         for (int i = 0; i < size[index]; i++)

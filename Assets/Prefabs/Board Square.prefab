@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3251422435460578593}
   - component: {fileID: 5266351175656002205}
   - component: {fileID: 2904660812490209624}
-  - component: {fileID: -3208936791696881948}
+  - component: {fileID: 1651164045}
   m_Layer: 0
   m_Name: Board Square
   m_TagString: Board
@@ -96,8 +96,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   piece: {fileID: 0}
   underside: {fileID: 9120268112669909623}
---- !u!64 &-3208936791696881948
-MeshCollider:
+  board: {fileID: 0}
+--- !u!65 &1651164045
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -106,10 +107,9 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+  serializedVersion: 2
+  m_Size: {x: 10, y: 0.5230293, z: 10}
+  m_Center: {x: 0, y: -0.23848534, z: 0}
 --- !u!1 &9120268112669909623
 GameObject:
   m_ObjectHideFlags: 0

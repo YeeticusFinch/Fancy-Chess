@@ -23,4 +23,19 @@ public class CarlMath : MonoBehaviour
         return result;
     }
   
+    public static List<int> concat(List<int> a, List<int> b)
+    {
+        List<int> result = new List<int>(a);
+        foreach (int e in b)
+            result.Add(e);
+        return result;
+    }
+
+    public static List<List<int>> concat(List<List<int>> a, List<List<int>> b)
+    {
+        List<List<int>> result = new List<List<int>>(a);
+        foreach (List<int> e in b)
+            result.Add(e);
+        return result;
+    }
 }
