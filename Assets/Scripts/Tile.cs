@@ -57,6 +57,7 @@ public class Tile : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!GameMaster.gameRunning) return;
         if (Time.time > clicked && clicked != 0)
         {
             GetComponent<Renderer>().material.SetColor("_Color", color);

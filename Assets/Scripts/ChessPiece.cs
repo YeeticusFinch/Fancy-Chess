@@ -130,18 +130,29 @@ public class ChessPiece : MonoBehaviour
     
     void Start()
     {
+
+        GetComponent<MeshRenderer>().enabled = false;
+        GetComponent<Collider>().enabled = false;
+    }
+
+    public void Init()
+    {
+        GetComponent<MeshRenderer>().enabled = true;
+        GetComponent<Collider>().enabled = true;
         if (timesMirrored > 0)
         {
             if (!arrayToMirrored)
-            location[mirror[timesMirrored-1]] = board.size[mirror[timesMirrored-1]] - 1 - location[mirror[timesMirrored-1]];
+                location[mirror[timesMirrored - 1]] = board.size[mirror[timesMirrored - 1]] - 1 - location[mirror[timesMirrored - 1]];
         }
         if (mirror.Count > timesMirrored)
         {
             timesMirrored++;
-            if (arrayToMirrored) {
-                for (int i = 1; i < board.size[mirror[timesMirrored - 1]]; i++) {
+            if (arrayToMirrored)
+            {
+                for (int i = 1; i < board.size[mirror[timesMirrored - 1]]; i++)
+                {
                     GameObject newPiece = Instantiate(gameObject);
-                    newPiece.GetComponent<ChessPiece>().location[mirror[timesMirrored - 1]]+=i;
+                    newPiece.GetComponent<ChessPiece>().location[mirror[timesMirrored - 1]] += i;
                 }
             }
             else
@@ -304,6 +315,7 @@ public class ChessPiece : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!GameMaster.gameRunning) return;
         if (board.canMove && (transform.forward - Vector3.up).magnitude < 0.1f)
         {
             if (board.whiteTurn && Mathf.Abs(Mathf.Abs(transform.localEulerAngles.y) - 180) > 2)

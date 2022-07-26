@@ -16,6 +16,8 @@ public class GameMaster : MonoBehaviour
 
     private bool allowingMove = false;
 
+    public static bool gameRunning = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -24,6 +26,7 @@ public class GameMaster : MonoBehaviour
     
     void FixedUpdate()
     {
+        if (!gameRunning) return;
         if (!board.canMove && !allowingMove) StartCoroutine(allowMove());
     }
 

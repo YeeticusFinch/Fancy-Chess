@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Video;
 
 public class MainCamera : MonoBehaviour
 {
@@ -14,13 +15,19 @@ public class MainCamera : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        StartCoroutine(CamSetup());
         //originalRotation = transform.localRotation;
+    }
+
+    public void Init()
+    {
+        GetComponent<VideoPlayer>().enabled = false;
+        StartCoroutine(CamSetup());
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (!GameMaster.gameRunning) return;
         if (Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0 || Input.GetAxisRaw("Jump") != 0)
             transform.position += (transform.right * Input.GetAxisRaw("Horizontal") + GetForwardUnitVector() * Input.GetAxisRaw("Vertical") + Vector3.up * Input.GetAxisRaw("Jump")) * speed;
         if (Input.GetButton("Fire2")) {
