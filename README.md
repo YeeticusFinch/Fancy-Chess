@@ -21,7 +21,7 @@ https://user-images.githubusercontent.com/50182007/181196389-1a2262a0-f142-4e0e-
 
 ## Planned Features:
 
-### Predefined Game Modes:
+### ----------------------------- Predefined Game Modes -----------------------------
 #### Regular Chess
 8x8x1 board, 16 pieces per side
 #### Ocean Man
@@ -34,7 +34,7 @@ Pieces can knock into eachother, you can knock your pieces into others as well
 #### 21st Century
 
 
-### Some Custom Pieces:
+### ----------------------------- Some Custom Pieces --------------------------
 #### Princess
 Can slide like a bishop, and jump like a knight
 #### Empress
