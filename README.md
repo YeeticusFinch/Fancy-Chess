@@ -40,8 +40,8 @@ Can slide like a bishop, and jump like a knight
 #### Empress
 Can slide like a rook, and jump like a knight
 #### Donald Trump
-Moves like a king
-Can only move to a spot that’s guarded by another piece (another piece can’t move away to break this)
+Moves like a king.
+Can only move to a spot that’s guarded by another piece (another piece can’t move away to break this).
 Places a pawn on the previous square during a move (building a wall)
 #### Pope
 Ferz, Alpil, and Knight combined
@@ -62,7 +62,7 @@ Can jump 1 or 2 spaces diagonally (Ferz and Alpil combined)
 #### Unicorn
 Can jump 2 spaces laterally, or 1 space diagonally
 #### Evil Wolf
-Moves like a king but with no backwards movement
+Moves like a king, but with no backwards movement
 #### Falcon
 Moves forward as a bishop, and backwards as a rook
 #### Faro
@@ -80,14 +80,14 @@ Moves like a knight by sliding, cannot jump
 #### Pyramid
 Can’t be moved or taken, just blocks a square
 #### Twin Tower
-Slides one square diagonally forward then any number of squares forward like a rook
+Slides one square diagonally forward then any number of squares forward like a rook.
 Can do the same thing backwards too
 #### War Machine
 Can jump 1 or 2 spaces laterally
 #### Zero
 Jumps and lands on the same square, allows for a turn skip
 #### Crab
-Moves forward like a knight
+Moves forward like a knight.
 Moves backwards like 2 backwards 2 sideways)
 #### Dragon
 Knight and Pawn combined
