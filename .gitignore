@@ -1,0 +1,8 @@
+# ignore all video files
+*.mov
+*.mp4
+*.mkv
+Assets/Background/Chess\ Animation.mov
+'Assets/Background/Chess Animation.mov'
+Chess\ Animation.mov
+'Chess Animation.mov"

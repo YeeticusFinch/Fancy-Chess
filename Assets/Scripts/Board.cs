@@ -23,6 +23,8 @@ public class Board : MonoBehaviour
     [HideInInspector]
     public List<List<int>> diagonals = null;
 
+    public int groundLevel = 0;
+
     public bool whiteTurn = true;
     public bool canMove = true;
 

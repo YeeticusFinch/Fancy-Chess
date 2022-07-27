@@ -73,7 +73,7 @@ public class ChessPiece : MonoBehaviour
         },
 
         ["dabbaba"] = new Move[] {
-            new Move(2, 0, false, true, true) // jumps to spaces laterally
+            new Move(2, 0, false, true, true) // jumps two spaces laterally
         },
 
         ["ferz"] = new Move[] {
@@ -130,19 +130,31 @@ public class ChessPiece : MonoBehaviour
     
     void Start()
     {
-
-        GetComponent<MeshRenderer>().enabled = false;
-        GetComponent<Collider>().enabled = false;
+        if (!GameMaster.gameRunning)
+        {
+            GetComponent<Rigidbody>().useGravity = false;
+            GetComponent<MeshRenderer>().enabled = false;
+            GetComponent<Collider>().enabled = false;
+        }
+        else if (timesMirrored > 0) Init();
     }
 
     public void Init()
     {
+        GetComponent<Rigidbody>().useGravity = false;
         GetComponent<MeshRenderer>().enabled = true;
         GetComponent<Collider>().enabled = true;
         if (timesMirrored > 0)
         {
             if (!arrayToMirrored)
                 location[mirror[timesMirrored - 1]] = board.size[mirror[timesMirrored - 1]] - 1 - location[mirror[timesMirrored - 1]];
+        } else
+        {
+            if (board.size.Count > 2)
+            {
+                if (location.Count < 3) location.Add(0);
+                location[2] += board.groundLevel;
+            }
         }
         if (mirror.Count > timesMirrored)
         {
@@ -153,6 +165,10 @@ public class ChessPiece : MonoBehaviour
                 {
                     GameObject newPiece = Instantiate(gameObject);
                     newPiece.GetComponent<ChessPiece>().location[mirror[timesMirrored - 1]] += i;
+                    Debug.Log("Spawning Clone " + newPiece.name);
+                    //newPiece.GetComponent<BoxCollider>().isTrigger = false;
+                    //newPiece.GetComponent<MeshRenderer>().enabled = true;
+                    //newPiece.GetComponent<Collider>().enabled = true;
                 }
             }
             else
