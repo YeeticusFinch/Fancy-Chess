@@ -17,6 +17,13 @@ public class MainCamera : MonoBehaviour
     //GameObject displayPiece;
     GameObject[] pieces;
 
+    [SerializeField]
+    GameObject[] selectors = new GameObject[3];
+
+    bool[] selecting = { false, false, false };
+
+    List<List<GameObject>> selectables = new List<List<GameObject>>();
+
     // Start is called before the first frame update
     void Start()
     {
@@ -34,6 +41,7 @@ public class MainCamera : MonoBehaviour
     public void Init()
     {
         GetComponent<VideoPlayer>().enabled = false;
+        List<List<GameObject>> selectables = new List<List<GameObject>>();
     }
 
     bool spinSnapping = false;
@@ -81,15 +89,74 @@ public class MainCamera : MonoBehaviour
                 //Debug.Log(hit.transform.gameObject.name);
                 if (hit.transform.gameObject.GetComponent<ChessPiece>() != null)
                     GameMaster.instance.board.squares[CarlMath.ListAsString(hit.transform.gameObject.GetComponent<ChessPiece>().location)].Click();
-                else
+                else if (hit.transform.gameObject.GetComponent<Tile>() != null)
                     hit.transform.gameObject.GetComponent<Tile>().Click();  
+            }
+        }
+        if (Input.GetButtonDown("Fire1"))
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit, 100))
+            {
+                if (hit.transform.gameObject.tag.Equals("SelectorWheel"))
+                {
+                    Debug.Log("Selector Click");
+                    if (hit.transform.gameObject.Equals(selectors[0]))
+                        BeginSelect(0);
+                    else if (hit.transform.gameObject.Equals(selectors[1]))
+                        BeginSelect(1);
+                    else if (hit.transform.gameObject.Equals(selectors[2]))
+                        BeginSelect(2);
+                } else if (hit.transform.gameObject.tag.Equals("Selectable"))
+                {
+                    for (int i = 0; i < selecting.Length; i++)
+                    {
+                        if (selecting[i])
+                        {
+                            for (int j = 0; j < selectables[i].Count; j++)
+                            {
+                                if (hit.transform.gameObject.Equals(selectables[i][j]))
+                                {
+                                    KillSelector(i);
+                                    GameMaster.displayDims[i] = j - 1;
+                                    selectors[i].GetComponent<TextMesh>().text = "∇ [" + (j == 0 ? "nil" : ""+(j - 1)) + "]";
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    void BeginSelect(int sel)
+    {
+        if (selecting[sel])
+            KillSelector(sel);
+        else
+        {
+            selecting[sel] = true;
+            while (selectables.Count >= sel) selectables.Add(new List<GameObject>());
+            for (int i = 0; i < GameMaster.instance.board.size.Count + 1; i++)
+            {
+                if (selectables[sel].Count >= i) { selectables[sel].Add(GameObject.Instantiate(selectors[sel], selectors[sel].transform.position + Vector3.up * -0.3f * (selectables[sel].Count + 1), selectors[sel].transform.rotation)); selectables[sel][selectables[sel].Count - 1].tag = "Selectable"; };
+                selectables[sel][i].SetActive(true);
+                if (i == 0)
+                    selectables[sel][i].GetComponent<TextMesh>().text = "--> [nil]";
+                else
+                    selectables[sel][i].GetComponent<TextMesh>().text = "--> [" + (i - 1) + "]";
             }
         }
     }
 
-    public void dropdownValueChanged(Dropdown target)
+    void KillSelector(int sel)
     {
-
+        selecting[sel] = false;
+        foreach (GameObject o in selectables[sel])
+        {
+            o.SetActive(false);
+        }
     }
 
     IEnumerator CamSetup()

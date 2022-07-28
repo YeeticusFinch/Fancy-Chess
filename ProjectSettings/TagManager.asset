@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Board
   - Piece
+  - SelectorWheel
+  - Selectable
   layers:
   - Default
   - TransparentFX

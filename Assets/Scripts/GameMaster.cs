@@ -19,12 +19,17 @@ public class GameMaster : MonoBehaviour
     public static bool gameRunning = false;
     public static bool gameStarted = false;
 
+    public static int[] displayDims = { 0, 1, 2 };
+
     public GameObject[] disableOnPlay;
+    public GameObject[] enableOnPlay;
 
     // Start is called before the first frame update
     void Start()
     {
         instance = this;
+        foreach (GameObject o in enableOnPlay)
+            o.SetActive(false);
     }
     
     void FixedUpdate()
@@ -34,6 +39,8 @@ public class GameMaster : MonoBehaviour
         {
             foreach (GameObject o in disableOnPlay)
                 o.SetActive(false);
+            foreach (GameObject o in enableOnPlay)
+                o.SetActive(true);
             gameStarted = true;
             board.Init();
             cam.gameObject.GetComponent<MainCamera>().Init();

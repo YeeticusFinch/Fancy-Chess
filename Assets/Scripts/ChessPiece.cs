@@ -355,6 +355,7 @@ public class ChessPiece : MonoBehaviour
         string str = CarlMath.ListAsString(location);
         transform.position = board.squares[str].gameObject.transform.position+Vector3.up*0.05f;
         board.squares[str].piece = this;
+        GetComponent<Rigidbody>().useGravity = true;
         GetComponent<BoxCollider>().isTrigger = false;
     }
 
