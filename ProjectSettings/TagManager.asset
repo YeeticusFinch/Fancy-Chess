@@ -8,6 +8,8 @@ TagManager:
   - Piece
   - SelectorWheel
   - Selectable
+  - DownArrow
+  - UpArrow
   layers:
   - Default
   - TransparentFX

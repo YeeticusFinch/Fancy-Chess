@@ -24,6 +24,8 @@ public class MainCamera : MonoBehaviour
 
     List<List<GameObject>> selectables = new List<List<GameObject>>();
 
+    public List<GameObject> positionSliders = new List<GameObject>(); // Tags DownArrow and UpArrow
+
     // Start is called before the first frame update
     void Start()
     {
@@ -42,6 +44,23 @@ public class MainCamera : MonoBehaviour
     {
         GetComponent<VideoPlayer>().enabled = false;
         List<List<GameObject>> selectables = new List<List<GameObject>>();
+        StartCoroutine(StartSelectables());
+        
+    }
+
+    IEnumerator StartSelectables()
+    {
+        yield return new WaitForSeconds(0.2f);
+        for (int i = 0; i < selectors.Length; i++)
+        {
+            if (i < GameMaster.instance.board.size.Count)
+                selectors[i].GetComponent<TextMesh>().text = "∇ [" + GameMaster.displayDims[i] + "]";
+            else
+            {
+                selectors[i].GetComponent<TextMesh>().text = "∇ [nil]";
+                GameMaster.displayDims[i] = -1;
+            }
+        }
     }
 
     bool spinSnapping = false;
@@ -102,11 +121,11 @@ public class MainCamera : MonoBehaviour
                 if (hit.transform.gameObject.tag.Equals("SelectorWheel"))
                 {
                     Debug.Log("Selector Click");
-                    if (hit.transform.gameObject.Equals(selectors[0]))
+                    if (hit.transform.position.Equals(selectors[0].transform.position))
                         BeginSelect(0);
-                    else if (hit.transform.gameObject.Equals(selectors[1]))
+                    else if (hit.transform.position.Equals(selectors[1].transform.position))
                         BeginSelect(1);
-                    else if (hit.transform.gameObject.Equals(selectors[2]))
+                    else if (hit.transform.position.Equals(selectors[2].transform.position))
                         BeginSelect(2);
                 } else if (hit.transform.gameObject.tag.Equals("Selectable"))
                 {
@@ -116,7 +135,7 @@ public class MainCamera : MonoBehaviour
                         {
                             for (int j = 0; j < selectables[i].Count; j++)
                             {
-                                if (hit.transform.gameObject.Equals(selectables[i][j]))
+                                if (hit.transform.position.Equals(selectables[i][j].transform.position))
                                 {
                                     KillSelector(i);
                                     GameMaster.displayDims[i] = j - 1;
@@ -132,15 +151,18 @@ public class MainCamera : MonoBehaviour
     
     void BeginSelect(int sel)
     {
+        Debug.Log("BeginSelect " + sel);
         if (selecting[sel])
             KillSelector(sel);
         else
         {
+            Debug.Log("Selector Lives");
             selecting[sel] = true;
-            while (selectables.Count >= sel) selectables.Add(new List<GameObject>());
+            while (selectables.Count <= sel) selectables.Add(new List<GameObject>());
             for (int i = 0; i < GameMaster.instance.board.size.Count + 1; i++)
             {
-                if (selectables[sel].Count >= i) { selectables[sel].Add(GameObject.Instantiate(selectors[sel], selectors[sel].transform.position + Vector3.up * -0.3f * (selectables[sel].Count + 1), selectors[sel].transform.rotation)); selectables[sel][selectables[sel].Count - 1].tag = "Selectable"; };
+                Debug.Log("Spawning Selector " + sel + " : " + i);
+                if (selectables[sel].Count <= i) { selectables[sel].Add(GameObject.Instantiate(selectors[sel], selectors[sel].transform.position + Vector3.forward * -0.3f * (selectables[sel].Count + 1), selectors[sel].transform.rotation)); selectables[sel][selectables[sel].Count - 1].tag = "Selectable"; };
                 selectables[sel][i].SetActive(true);
                 if (i == 0)
                     selectables[sel][i].GetComponent<TextMesh>().text = "--> [nil]";

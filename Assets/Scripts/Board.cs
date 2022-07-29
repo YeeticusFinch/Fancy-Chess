@@ -59,17 +59,40 @@ public class Board : MonoBehaviour
         List<int> startIter = new List<int>();
         for (int i = 0; i < dimensions; i++)
             startIter.Add(0);
+        GameMaster.displayLoc = new List<int>(startIter);
         SpawnSquares(0, startIter);
+    }
+
+    public void UpdateSquares()
+    {
+        foreach (Tile square in squares.Values)
+        {
+            bool hide = false;
+            for (int i = 0; i < dimensions; i++)
+            {
+                if (GameMaster.displayDims[0] != i && GameMaster.displayDims[1] != i && GameMaster.displayDims[2] != i && square.GetLocation()[i] != GameMaster.displayLoc[i])
+                    hide = true;
+                
+
+            }
+        }
     }
 
     void SpawnSquares(int index, List<int> iter)
     {
         if (index >= dimensions) 
         {
-            GameObject newTile = Instantiate(boardSquare, new Vector3(dimensions > 0 ? iter[0]-size[0]/2 + 0.5f : 0, dimensions > 2 ? 1.5f*(iter[2]*2-size[2]) : 0, dimensions > 1 ? iter[1]-size[1]/2 + 0.5f : 0), Quaternion.identity);
+            int dimX = GameMaster.displayDims[0];
+            int dimY = GameMaster.displayDims[1];
+            int dimZ = GameMaster.displayDims[2];
+            GameObject newTile = Instantiate(boardSquare, new Vector3(dimensions > 0 ? iter[dimX]-size[dimX]/2 + 0.5f : 0, dimensions > 2 ? 1.5f*(iter[dimZ]*2-size[dimZ]) : 0, dimensions > 1 ? iter[dimY]-size[dimY]/2 + 0.5f : 0), Quaternion.identity);
             int evens = 0;
-            for (int i = 0; i < iter.Count; i++)
-                evens += iter[i]%2 == 0 ? 1 : 0;
+            bool hide = false;
+            for (int i = 0; i < iter.Count; i++) {
+                evens += iter[i] % 2 == 0 ? 1 : 0;
+                if (GameMaster.displayDims[0] != i && GameMaster.displayDims[1] != i && GameMaster.displayDims[2] != i)
+                    hide = true;
+            }
             if (evens % 2 != 0)
             {
                 newTile.GetComponent<Tile>().SetColor(colorA);
@@ -80,6 +103,7 @@ public class Board : MonoBehaviour
             }
             newTile.GetComponent<Tile>().SetLocation(new List<int>(iter));
             newTile.GetComponent<Tile>().board = this;
+            if (hide) ; // hide shit (maybe this should be done after the piece gets placed
             return;
         }
         for (int i = 0; i < size[index]; i++)

@@ -20,6 +20,7 @@ public class GameMaster : MonoBehaviour
     public static bool gameStarted = false;
 
     public static int[] displayDims = { 0, 1, 2 };
+    public static List<int> displayLoc = new List<int>();
 
     public GameObject[] disableOnPlay;
     public GameObject[] enableOnPlay;
