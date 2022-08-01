@@ -38,6 +38,8 @@ public class GameMaster : MonoBehaviour
         if (!gameRunning) return;
         else if (!gameStarted)
         {
+            for (int i = 0; i < board.size.Count; i++)
+                displayLoc.Add(0);
             foreach (GameObject o in disableOnPlay)
                 o.SetActive(false);
             foreach (GameObject o in enableOnPlay)

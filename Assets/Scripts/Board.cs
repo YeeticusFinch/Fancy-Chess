@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class Board : MonoBehaviour
 {
@@ -150,6 +151,57 @@ public class Board : MonoBehaviour
         }
     }
 
+    public void UpdateDimensions()
+    {
+        int dimX = GameMaster.displayDims[0];
+        int dimY = GameMaster.displayDims[1];
+        int dimZ = GameMaster.displayDims[2];
+        foreach (Tile square in squares.Values)
+        {
+            float xPos = (dimX == -1 ? 0 : square.GetLocation()[dimX] - size[dimX] / 2 + 0.5f);
+            float yPos = (dimY == -1 ? 0 : square.GetLocation()[dimY] - size[dimY] / 2 + 0.5f);
+            float zPos = (dimZ == -1 ? 0 : 1.5f * (square.GetLocation()[dimZ] * 2 - size[dimZ]));
+            bool skip = false;
+            for (int i = 0; i < dimensions; i++)
+            {
+                if (!GameMaster.displayDims.Contains(i) && square.GetLocation()[i] != GameMaster.displayLoc[i])
+                    skip = true;
+            }
+            if (skip)
+            {
+                if (square.piece != null)
+                {
+                    //square.piece.gameObject.SetActive(false);
+                    square.piece.GetComponent<MeshRenderer>().enabled = false;
+                    square.piece.GetComponent<BoxCollider>().enabled = false;
+                    square.piece.GetComponent<Rigidbody>().useGravity = false;
+                    square.piece.gameObject.layer = 2;
+                }
+                //square.gameObject.SetActive(false);
+                square.GetComponent<MeshRenderer>().enabled = false;
+                square.GetComponent<BoxCollider>().enabled = false;
+                square.gameObject.layer = 2;
+            } else
+            {
+                //square.gameObject.SetActive(true);
+                square.GetComponent<MeshRenderer>().enabled = true;
+                square.GetComponent<BoxCollider>().enabled = true;
+                square.gameObject.layer = 0;
+                if (square.piece != null)
+                {
+                    //square.piece.gameObject.SetActive(true);
+                    square.piece.GetComponent<MeshRenderer>().enabled = true;
+                    square.piece.GetComponent<BoxCollider>().enabled = true;
+                    square.piece.GetComponent<Rigidbody>().useGravity = true;
+                    square.piece.gameObject.layer = 0;
+                }
+            }
+            square.transform.position = new Vector3(xPos, zPos, yPos);
+            if (square.piece != null)
+                square.piece.transform.position = square.transform.position;
+        }
+    }
+
 
     /*
     void InitBoard()
@@ -174,6 +226,6 @@ public class Board : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+       
     }
 }

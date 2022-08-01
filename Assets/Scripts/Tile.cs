@@ -9,6 +9,9 @@ public class Tile : MonoBehaviour
     public GameObject underside;
     public Board board;
 
+    public static bool deselect = false;
+    private static bool deselecting = false;
+
     Color color;
     float clicked = 0;
 
@@ -63,14 +66,32 @@ public class Tile : MonoBehaviour
             GetComponent<Renderer>().material.SetColor("_Color", color);
             clicked = 0;
         }
-        if (Input.GetButtonDown("Fire1"))
+        if (deselect && !GetComponent<Renderer>().material.GetColor("_EmissionColor").Equals(Color.black))
         {
-            ClearColor();
+            //ClearColor();
+            if (!deselecting)
+                StartCoroutine(Dedeselect());
         }
+    }
+
+    IEnumerator Dedeselect()
+    {
+        deselecting = true;
+        yield return new WaitForSeconds(0.1f);
+        deselect = false;
+        deselecting = false;
     }
 
     public void Click()
     {
+        //if (GetComponent<MeshRenderer>().enabled == false)
+        //    return;
+        //deselect = true;
+        foreach (Tile square in board.squares.Values)
+        {
+            if (!square.gameObject.Equals(gameObject))
+                square.ClearColor();
+        }
         GetComponent<Renderer>().material.SetColor("_Color", Color.red);
         clicked = Time.time + 0.1f;
         if (GetComponent<Renderer>().material.GetColor("_EmissionColor").Equals(Color.green) && GameMaster.selectedPiece != null) // If true, move the piece over
@@ -112,12 +133,16 @@ public class Tile : MonoBehaviour
     
     IEnumerator MoveTo(GameObject item, Vector3 pos, float seconds)
     {
+        //item.SetActive(true);
         //foreach (Collider col in ghost)
         //    col.isTrigger = true;
         item.GetComponent<ChessPiece>().movingTo = pos;
         //piece.GetComponent<Rigidbody>().useGravity = false;
         piece.GetComponent<Rigidbody>().freezeRotation = true;
         //piece.GetComponent<Rigidbody>().isKinematic = true;
+        item.GetComponent<MeshRenderer>().enabled = true;
+        item.GetComponent<BoxCollider>().enabled = true;
+        item.GetComponent<Rigidbody>().useGravity = true;
         float dist = (pos - item.transform.position).magnitude;
         float step = (pos - item.transform.position).magnitude / (seconds * 100);
         while ((pos - item.transform.position).magnitude > 0.03f && item.GetComponent<ChessPiece>().movingTo == pos && !(board.canMove && board.whiteTurn != item.GetComponent<ChessPiece>().white))

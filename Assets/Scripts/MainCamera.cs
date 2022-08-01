@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Video;
+using System.Linq;
 
 public class MainCamera : MonoBehaviour
 {
@@ -25,6 +26,8 @@ public class MainCamera : MonoBehaviour
     List<List<GameObject>> selectables = new List<List<GameObject>>();
 
     public List<GameObject> positionSliders = new List<GameObject>(); // Tags DownArrow and UpArrow
+
+    //public int fancyMask = 2;
 
     // Start is called before the first frame update
     void Start()
@@ -59,6 +62,17 @@ public class MainCamera : MonoBehaviour
             {
                 selectors[i].GetComponent<TextMesh>().text = "∇ [nil]";
                 GameMaster.displayDims[i] = -1;
+            }
+        }
+        for (int i = 0; i < GameMaster.instance.board.size.Count; i++)
+        {
+            if (i >= GameMaster.displayLoc.Count) GameMaster.displayLoc.Add(0);
+            if (i >= positionSliders.Count)
+            {
+                GameObject newSlider = Instantiate(positionSliders[0], positionSliders[0].transform.position + positionSliders[0].transform.up * -0.4f * (i), positionSliders[0].transform.rotation);
+                newSlider.transform.SetParent(transform);
+                newSlider.GetComponent<TextMesh>().text = i + "[" + GameMaster.displayLoc[i] + "]";
+                positionSliders.Add(newSlider);
             }
         }
     }
@@ -138,12 +152,47 @@ public class MainCamera : MonoBehaviour
                                 if (hit.transform.position.Equals(selectables[i][j].transform.position))
                                 {
                                     KillSelector(i);
-                                    GameMaster.displayDims[i] = j - 1;
-                                    selectors[i].GetComponent<TextMesh>().text = "∇ [" + (j == 0 ? "nil" : ""+(j - 1)) + "]";
+                                    if (j == 0 || !GameMaster.displayDims.Contains(j - 1))
+                                    {
+                                        GameMaster.displayDims[i] = j - 1;
+                                        selectors[i].GetComponent<TextMesh>().text = "∇ [" + (j == 0 ? "nil" : "" + (j - 1)) + "]";
+                                        GameMaster.instance.board.UpdateDimensions();
+                                    }
+                                    break;
                                 }
                             }
                         }
                     }
+                } else if (hit.transform.gameObject.tag.Equals("UpArrow"))
+                {
+                    for (int i = 0; i < positionSliders.Count; i++)
+                    {
+                        if (hit.transform.IsChildOf(positionSliders[i].transform))
+                        {
+                            GameMaster.displayLoc[i]++;
+                            while (GameMaster.displayLoc[i] < 0) GameMaster.displayLoc[i] += GameMaster.instance.board.size[i];
+                            GameMaster.displayLoc[i] %= GameMaster.instance.board.size[i];
+                            positionSliders[i].GetComponent<TextMesh>().text = i + "[" + GameMaster.displayLoc[i] + "]";
+                            GameMaster.instance.board.UpdateDimensions();
+                        }
+                    }
+                }
+                else if (hit.transform.gameObject.tag.Equals("DownArrow"))
+                {
+                    for (int i = 0; i < positionSliders.Count; i++)
+                    {
+                        if (hit.transform.IsChildOf(positionSliders[i].transform))
+                        {
+                            GameMaster.displayLoc[i]--;
+                            while (GameMaster.displayLoc[i] < 0) GameMaster.displayLoc[i] += GameMaster.instance.board.size[i];
+                            GameMaster.displayLoc[i] %= GameMaster.instance.board.size[i];
+                            positionSliders[i].GetComponent<TextMesh>().text = i + "[" + GameMaster.displayLoc[i] + "]";
+                            GameMaster.instance.board.UpdateDimensions();
+                        }
+                    }
+                } else
+                {
+                    Tile.deselect = true;
                 }
             }
         }
@@ -162,7 +211,11 @@ public class MainCamera : MonoBehaviour
             for (int i = 0; i < GameMaster.instance.board.size.Count + 1; i++)
             {
                 Debug.Log("Spawning Selector " + sel + " : " + i);
-                if (selectables[sel].Count <= i) { selectables[sel].Add(GameObject.Instantiate(selectors[sel], selectors[sel].transform.position + Vector3.forward * -0.3f * (selectables[sel].Count + 1), selectors[sel].transform.rotation)); selectables[sel][selectables[sel].Count - 1].tag = "Selectable"; };
+                if (selectables[sel].Count <= i) {
+                    selectables[sel].Add(GameObject.Instantiate(selectors[sel], selectors[sel].transform.position + selectors[sel].transform.up * -0.3f * (selectables[sel].Count + 1), selectors[sel].transform.rotation));
+                    selectables[sel][selectables[sel].Count - 1].tag = "Selectable";
+                    selectables[sel][selectables[sel].Count - 1].transform.SetParent(transform);
+                };
                 selectables[sel][i].SetActive(true);
                 if (i == 0)
                     selectables[sel][i].GetComponent<TextMesh>().text = "--> [nil]";
