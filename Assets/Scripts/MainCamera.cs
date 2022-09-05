@@ -130,7 +130,7 @@ public class MainCamera : MonoBehaviour
             axis.transform.eulerAngles = new Vector3(rotX, rotY, 0);
             //GameMaster.instance.board.canMove = false;
         }
-        if (Input.GetButton("Fire1") && GameMaster.instance.board.canMove)
+        if (Input.GetButtonDown("Fire1") && GameMaster.instance.board.canMove)
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
@@ -143,7 +143,7 @@ public class MainCamera : MonoBehaviour
                     hit.transform.gameObject.GetComponent<Tile>().Click();  
             }
         }
-        if (Input.GetButton("Fire3"))
+        if (Input.GetButtonDown("Fire3"))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
@@ -153,6 +153,13 @@ public class MainCamera : MonoBehaviour
                 if (hit.transform.gameObject.GetComponent<ChessPiece>() != null || hit.transform.gameObject.GetComponent<Tile>() != null)
                     axis.transform.position = hit.transform.position;
             }
+        }
+        if (Input.GetButtonDown("Reset Camera"))
+        {
+            axis.transform.position = Vector3.zero;
+            rotX = 0;
+            rotY = 0;
+            axis.transform.eulerAngles = new Vector3(rotX, rotY, 0);
         }
         for (int i = 0; i < positionSliders.Count; i++)
         {
