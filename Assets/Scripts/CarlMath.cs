@@ -38,4 +38,12 @@ public class CarlMath : MonoBehaviour
             result.Add(e);
         return result;
     }
+
+    public static bool equals(List<int> a, List<int> b)
+    {
+        for (int i = 0; i < Mathf.Min(a.Count, b.Count); i++)
+            if (a[i] != b[i])
+                return false;
+        return true;
+    }
 }

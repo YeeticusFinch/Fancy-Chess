@@ -347,6 +347,19 @@ public class ChessPiece : MonoBehaviour
             }
             ignoredCollisions = new List<Collider>();
         }
+        if (GetComponent<Rigidbody>().velocity.magnitude > 0.01f)
+        {
+            // if piece is below board, delete it
+            if (transform.position.y < board.GetMinY()-5)
+            {
+                if (GameMaster.instance.board.squares[CarlMath.ListAsString(location)].piece == this)
+                {
+                    GameMaster.instance.board.squares[CarlMath.ListAsString(location)].piece = null;
+                }
+                GameObject.Destroy(this.gameObject);
+            }
+
+        }
     }
 
     IEnumerator Place()

@@ -5,6 +5,7 @@ using System.Linq;
 
 public class Board : MonoBehaviour
 {
+    public LayerMask mask;
     public List<int> size = new List<int>();
     public List<int> dimensionsToMirror = new List<int>(); // when setting up the pieces on the board, mirror dimensions of these numbers
     [HideInInspector]
@@ -51,6 +52,34 @@ public class Board : MonoBehaviour
         return squares[str].piece;
     }
 
+    public void UpdatePieceLocations()
+    {
+        GameObject[] pieces = GameObject.FindGameObjectsWithTag("Piece");
+        foreach (Tile square in squares.Values)
+        {
+            square.piece = null;
+        }
+        foreach (GameObject piece in pieces)
+        {
+            RaycastHit hit;
+            if (Physics.Raycast(piece.transform.position, -Vector3.up, out hit, 5, mask))
+            {
+                //Debug.Log(hit.transform.gameObject.name);
+                if (hit.transform.gameObject.GetComponent<ChessPiece>() != null)
+                {
+                    //GameMaster.instance.board.squares[CarlMath.ListAsString(hit.transform.gameObject.GetComponent<ChessPiece>().location)].Click();
+                    piece.GetComponent<ChessPiece>().location = hit.transform.gameObject.GetComponent<ChessPiece>().location;
+                }
+                else if (hit.transform.gameObject.GetComponent<Tile>() != null)
+                {
+                    //hit.transform.gameObject.GetComponent<Tile>().Click();
+                    piece.GetComponent<ChessPiece>().location = hit.transform.gameObject.GetComponent<Tile>().GetLocation();
+                    hit.transform.gameObject.GetComponent<Tile>().piece = piece.GetComponent<ChessPiece>();
+                }
+            }
+        }
+    }
+
     void InitBoard()
     {
         dimensions = size.Count;
@@ -62,6 +91,13 @@ public class Board : MonoBehaviour
             startIter.Add(0);
         GameMaster.displayLoc = new List<int>(startIter);
         SpawnSquares(0, startIter);
+        StartCoroutine(HideOtherDimensions());
+    }
+
+    IEnumerator HideOtherDimensions()
+    {
+        yield return new WaitForSeconds(0.3f);
+        UpdateDimensions();
     }
 
     public void UpdateSquares()
@@ -77,6 +113,17 @@ public class Board : MonoBehaviour
 
             }
         }
+    }
+
+    public float GetMinY()
+    {
+        float result = -69420;
+        foreach (Tile square in squares.Values)
+        {
+            if (result == -69420 || square.transform.position.y < result)
+                result = square.transform.position.y;
+        }
+        return result;
     }
 
     void SpawnSquares(int index, List<int> iter)
@@ -161,14 +208,20 @@ public class Board : MonoBehaviour
             float xPos = (dimX == -1 ? 0 : square.GetLocation()[dimX] - size[dimX] / 2 + 0.5f);
             float yPos = (dimY == -1 ? 0 : square.GetLocation()[dimY] - size[dimY] / 2 + 0.5f);
             float zPos = (dimZ == -1 ? 0 : 1.5f * (square.GetLocation()[dimZ] * 2 - size[dimZ]));
+            square.console += "\n\n---------\nxPos = " + xPos + ", yPos = " + yPos + ", zPos = " + zPos;
             bool skip = false;
             for (int i = 0; i < dimensions; i++)
             {
                 if (!GameMaster.displayDims.Contains(i) && square.GetLocation()[i] != GameMaster.displayLoc[i])
                     skip = true;
+                //else if (GameMaster.displayDims.Contains(i))
+                //    square.console += "\ndisplayDims contains " + i;
+                //else
+                //    square.console += "\n" + square.GetLocation()[i] + " = " + GameMaster.displayLoc[i];
             }
             if (skip)
             {
+                //square.console += "SKIPPING!";
                 if (square.piece != null)
                 {
                     //square.piece.gameObject.SetActive(false);
@@ -177,12 +230,27 @@ public class Board : MonoBehaviour
                     square.piece.GetComponent<Rigidbody>().useGravity = false;
                     square.piece.gameObject.layer = 2;
                 }
+                if (GameMaster.bowling)
+                {
+                    GameObject[] pieces = GameObject.FindGameObjectsWithTag("Piece");
+                    foreach (GameObject piece in pieces)
+                    {
+                        if (CarlMath.equals(piece.GetComponent<ChessPiece>().location, square.GetLocation()))
+                        {
+                            piece.GetComponent<MeshRenderer>().enabled = true;
+                            piece.GetComponent<BoxCollider>().enabled = true;
+                            piece.GetComponent<Rigidbody>().useGravity = true;
+                            piece.gameObject.layer = 0;
+                        }
+                    }
+                }
                 //square.gameObject.SetActive(false);
                 square.GetComponent<MeshRenderer>().enabled = false;
                 square.GetComponent<BoxCollider>().enabled = false;
                 square.gameObject.layer = 2;
             } else
             {
+                //square.console += "UNDO SKIP";
                 //square.gameObject.SetActive(true);
                 square.GetComponent<MeshRenderer>().enabled = true;
                 square.GetComponent<BoxCollider>().enabled = true;
@@ -194,6 +262,20 @@ public class Board : MonoBehaviour
                     square.piece.GetComponent<BoxCollider>().enabled = true;
                     square.piece.GetComponent<Rigidbody>().useGravity = true;
                     square.piece.gameObject.layer = 0;
+                }
+                if (GameMaster.bowling)
+                {
+                    GameObject[] pieces = GameObject.FindGameObjectsWithTag("Piece");
+                    foreach (GameObject piece in pieces)
+                    {
+                        if (CarlMath.equals(piece.GetComponent<ChessPiece>().location, square.GetLocation()))
+                        {
+                            piece.GetComponent<MeshRenderer>().enabled = true;
+                            piece.GetComponent<BoxCollider>().enabled = true;
+                            piece.GetComponent<Rigidbody>().useGravity = true;
+                            piece.gameObject.layer = 0;
+                        }
+                    }
                 }
             }
             square.transform.position = new Vector3(xPos, zPos, yPos);

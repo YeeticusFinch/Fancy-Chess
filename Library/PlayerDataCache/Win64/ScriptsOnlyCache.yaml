@@ -1,9 +1,13 @@
 ScriptsOnlyBuild:
   usedScripts:
+    Assembly-CSharp-Editor.dll:
+    - MK.Glow.Editor.InstallWizard.Configuration
     Assembly-CSharp.dll:
     - Board
     - ChessPiece
     - GameMaster
+    - MK.Glow.Legacy.MKGlow
+    - MK.Glow.Resources
     - MainCamera
     - Tile
     Unity.Rider.Editor.dll:
@@ -54,6 +58,10 @@ ScriptsOnlyBuild:
       Script: {instanceID: 12378}
     - Class: 114
       Script: {instanceID: 12834}
+    - Class: 114
+      Script: {instanceID: 30408}
+    - Class: 114
+      Script: {instanceID: 30448}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 157
@@ -321,7 +329,7 @@ ScriptsOnlyBuild:
     className: Button
   - hash:
       serializedVersion: 2
-      Hash: 242a2494a05cf4fdc5edc3048e5b6706
+      Hash: 78e7692a394a6919a929d8ad45e874a7
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: Board
@@ -339,7 +347,7 @@ ScriptsOnlyBuild:
     className: VerticalLayoutGroup
   - hash:
       serializedVersion: 2
-      Hash: fd6bb957b0455eab5e05d44300d66a80
+      Hash: 7cabd7f282af5b40124650aa9707b8d2
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: MainCamera
@@ -423,7 +431,7 @@ ScriptsOnlyBuild:
     className: MarkerTrack
   - hash:
       serializedVersion: 2
-      Hash: 83342d1a2ab2b369d611b6c9af3aa1fa
+      Hash: ed0e2f19dc93de2915c4b320d865afee
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: Tile
@@ -529,6 +537,18 @@ ScriptsOnlyBuild:
     assemblyName: Unity.Timeline.dll
     namespaceName: UnityEngine.Timeline
     className: PlayableTrack
+  - hash:
+      serializedVersion: 2
+      Hash: 1cd57def02993750c189d30000e4d93e
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: MK.Glow.Legacy
+    className: MKGlow
+  - hash:
+      serializedVersion: 2
+      Hash: d8baadad6abe93ff071e9f12b8bf33f6
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: MK.Glow
+    className: Resources
   platform: 19
   scenePathNames:
   - Assets/Scenes/ChessScene.unity

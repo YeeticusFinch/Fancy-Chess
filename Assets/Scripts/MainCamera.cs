@@ -7,16 +7,20 @@ using System.Linq;
 
 public class MainCamera : MonoBehaviour
 {
+    public GameObject axis;
+    public Color backgroundColor = new Color();
     public float speed = 0.1f;
     public float mouseSensitivity = 3f;
 
-    float rotX = 90;
+    float rotX = 0;
     float rotY = 0;
     //Quaternion originalRotation;
 
     public GameObject displayLoc;
     //GameObject displayPiece;
     GameObject[] pieces;
+
+    public TextMesh cameraModeText;
 
     [SerializeField]
     GameObject[] selectors = new GameObject[3];
@@ -48,7 +52,7 @@ public class MainCamera : MonoBehaviour
         GetComponent<VideoPlayer>().enabled = false;
         List<List<GameObject>> selectables = new List<List<GameObject>>();
         StartCoroutine(StartSelectables());
-        
+        GetComponent<Camera>().backgroundColor = backgroundColor;
     }
 
     IEnumerator StartSelectables()
@@ -57,7 +61,7 @@ public class MainCamera : MonoBehaviour
         for (int i = 0; i < selectors.Length; i++)
         {
             if (i < GameMaster.instance.board.size.Count)
-                selectors[i].GetComponent<TextMesh>().text = "∇ [" + GameMaster.displayDims[i] + "]";
+                selectors[i].GetComponent<TextMesh>().text = "∇ [" + (GameMaster.displayDims[i] + 1) + "]"; // used to not have `+ 1`
             else
             {
                 selectors[i].GetComponent<TextMesh>().text = "∇ [nil]";
@@ -71,13 +75,14 @@ public class MainCamera : MonoBehaviour
             {
                 GameObject newSlider = Instantiate(positionSliders[0], positionSliders[0].transform.position + positionSliders[0].transform.up * -0.4f * (i), positionSliders[0].transform.rotation);
                 newSlider.transform.SetParent(transform);
-                newSlider.GetComponent<TextMesh>().text = i + "[" + GameMaster.displayLoc[i] + "]";
+                newSlider.GetComponent<TextMesh>().text = i + 1 + " [" + GameMaster.displayLoc[i] + "]"; // used to not have `+ 1`
                 positionSliders.Add(newSlider);
             }
         }
     }
 
     bool spinSnapping = false;
+    public LayerMask mask;
     // Update is called once per frame
     void Update()
     {
@@ -92,7 +97,7 @@ public class MainCamera : MonoBehaviour
             {
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 RaycastHit hit;
-                if (Physics.Raycast(ray, out hit, 100))
+                if (Physics.Raycast(ray, out hit, 100, mask))
                 {
                     //Debug.Log(hit.transform.gameObject.name);
                     if (hit.transform.gameObject.name.Equals("Start Button")) {
@@ -103,34 +108,68 @@ public class MainCamera : MonoBehaviour
             return;
         }
         if (Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0 || Input.GetAxisRaw("Jump") != 0)
-            transform.position += (transform.right * Input.GetAxisRaw("Horizontal") + GetForwardUnitVector() * Input.GetAxisRaw("Vertical") + Vector3.up * Input.GetAxisRaw("Jump")) * speed;
+        {
+            //transform.position += (transform.right * Input.GetAxisRaw("Horizontal") + GetForwardUnitVector() * Input.GetAxisRaw("Vertical") + Vector3.up * Input.GetAxisRaw("Jump")) * speed;
+            transform.position += transform.forward * Input.GetAxisRaw("Vertical");
+            rotY += Input.GetAxisRaw("Horizontal");
+            rotX += Input.GetAxis("Jump");
+            axis.transform.eulerAngles = new Vector3(rotX, rotY, 0);
+        }
+        if (Input.GetButtonDown("Camera Mode"))
+        {
+            GetComponent<Camera>().orthographic = !GetComponent<Camera>().orthographic;
+            cameraModeText.text = GetComponent<Camera>().orthographic ? "orthographic" : "perspective";
+        }
         if (Input.GetButton("Fire2")) {
             rotX -= Input.GetAxisRaw("Mouse Y") * mouseSensitivity;
             rotY += Input.GetAxisRaw("Mouse X") * mouseSensitivity;
             //Quaternion xQuaternion = Quaternion.AngleAxis(rotX, Vector3.up);
             //Quaternion yQuaternion = Quaternion.AngleAxis(rotY, -Vector3.right);
             //transform.localRotation = originalRotation * xQuaternion * yQuaternion;
-            transform.eulerAngles = new Vector3(rotX, rotY, 0);
-            GameMaster.instance.board.canMove = false;
+            //transform.eulerAngles = new Vector3(rotX, rotY, 0);
+            axis.transform.eulerAngles = new Vector3(rotX, rotY, 0);
+            //GameMaster.instance.board.canMove = false;
         }
         if (Input.GetButton("Fire1") && GameMaster.instance.board.canMove)
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, 100))
+            if (Physics.Raycast(ray, out hit, 100, mask))
             {
                 //Debug.Log(hit.transform.gameObject.name);
                 if (hit.transform.gameObject.GetComponent<ChessPiece>() != null)
-                    GameMaster.instance.board.squares[CarlMath.ListAsString(hit.transform.gameObject.GetComponent<ChessPiece>().location)].Click();
+                    GameMaster.instance.board.squares[CarlMath.ListAsString(hit.transform.gameObject.GetComponent<ChessPiece>().location)].Click(hit.transform.gameObject.GetComponent<ChessPiece>());
                 else if (hit.transform.gameObject.GetComponent<Tile>() != null)
                     hit.transform.gameObject.GetComponent<Tile>().Click();  
+            }
+        }
+        if (Input.GetButton("Fire3"))
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit, 100, mask))
+            {
+                //Debug.Log(hit.transform.gameObject.name);
+                if (hit.transform.gameObject.GetComponent<ChessPiece>() != null || hit.transform.gameObject.GetComponent<Tile>() != null)
+                    axis.transform.position = hit.transform.position;
+            }
+        }
+        for (int i = 0; i < positionSliders.Count; i++)
+        {
+            if (Input.GetKeyDown(""+(i+1)))
+            {
+                GameMaster.displayLoc[i]++;
+                while (GameMaster.displayLoc[i] < 0) GameMaster.displayLoc[i] += GameMaster.instance.board.size[i];
+                GameMaster.displayLoc[i] %= GameMaster.instance.board.size[i];
+                positionSliders[i].GetComponent<TextMesh>().text = i + 1 + " [" + GameMaster.displayLoc[i] + "]"; // didn't used to have a `+ 1`
+                GameMaster.instance.board.UpdateDimensions();
             }
         }
         if (Input.GetButtonDown("Fire1"))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, 100))
+            if (Physics.Raycast(ray, out hit, 100, mask))
             {
                 if (hit.transform.gameObject.tag.Equals("SelectorWheel"))
                 {
@@ -155,7 +194,7 @@ public class MainCamera : MonoBehaviour
                                     if (j == 0 || !GameMaster.displayDims.Contains(j - 1))
                                     {
                                         GameMaster.displayDims[i] = j - 1;
-                                        selectors[i].GetComponent<TextMesh>().text = "∇ [" + (j == 0 ? "nil" : "" + (j - 1)) + "]";
+                                        selectors[i].GetComponent<TextMesh>().text = "∇ [" + (j == 0 ? "nil" : "" + (j)) + "]"; // used to be (j-1)
                                         GameMaster.instance.board.UpdateDimensions();
                                     }
                                     break;
@@ -163,6 +202,10 @@ public class MainCamera : MonoBehaviour
                             }
                         }
                     }
+                } else if (hit.transform.gameObject.tag.Equals("CameraMode"))
+                {
+                    GetComponent<Camera>().orthographic = !GetComponent<Camera>().orthographic;
+                    cameraModeText.text = GetComponent<Camera>().orthographic ? "orthographic" : "perspective";
                 } else if (hit.transform.gameObject.tag.Equals("UpArrow"))
                 {
                     for (int i = 0; i < positionSliders.Count; i++)
@@ -172,7 +215,7 @@ public class MainCamera : MonoBehaviour
                             GameMaster.displayLoc[i]++;
                             while (GameMaster.displayLoc[i] < 0) GameMaster.displayLoc[i] += GameMaster.instance.board.size[i];
                             GameMaster.displayLoc[i] %= GameMaster.instance.board.size[i];
-                            positionSliders[i].GetComponent<TextMesh>().text = i + "[" + GameMaster.displayLoc[i] + "]";
+                            positionSliders[i].GetComponent<TextMesh>().text = i + 1 + " [" + GameMaster.displayLoc[i] + "]"; // didn't used to have a `+ 1`
                             GameMaster.instance.board.UpdateDimensions();
                         }
                     }
@@ -186,7 +229,7 @@ public class MainCamera : MonoBehaviour
                             GameMaster.displayLoc[i]--;
                             while (GameMaster.displayLoc[i] < 0) GameMaster.displayLoc[i] += GameMaster.instance.board.size[i];
                             GameMaster.displayLoc[i] %= GameMaster.instance.board.size[i];
-                            positionSliders[i].GetComponent<TextMesh>().text = i + "[" + GameMaster.displayLoc[i] + "]";
+                            positionSliders[i].GetComponent<TextMesh>().text = i + 1 + " [" + GameMaster.displayLoc[i] + "]"; // didn't used to have a `+ 1`
                             GameMaster.instance.board.UpdateDimensions();
                         }
                     }
@@ -220,7 +263,7 @@ public class MainCamera : MonoBehaviour
                 if (i == 0)
                     selectables[sel][i].GetComponent<TextMesh>().text = "--> [nil]";
                 else
-                    selectables[sel][i].GetComponent<TextMesh>().text = "--> [" + (i - 1) + "]";
+                    selectables[sel][i].GetComponent<TextMesh>().text = "--> [" + (i) + "]"; // used to be (i-1)
             }
         }
     }

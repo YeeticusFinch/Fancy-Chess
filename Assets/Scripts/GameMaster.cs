@@ -9,8 +9,8 @@ public class GameMaster : MonoBehaviour
 
     public static ChessPiece selectedPiece = null;
 
-    public static bool canabalism = false;
-    //public static bool bowling = false;
+    public static bool canabalism = true;
+    public static bool bowling = true;
 
     public static GameMaster instance;
 

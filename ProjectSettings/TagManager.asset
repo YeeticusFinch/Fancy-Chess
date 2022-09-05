@@ -10,6 +10,7 @@ TagManager:
   - Selectable
   - DownArrow
   - UpArrow
+  - CameraMode
   layers:
   - Default
   - TransparentFX

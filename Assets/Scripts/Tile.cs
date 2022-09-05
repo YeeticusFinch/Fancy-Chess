@@ -84,6 +84,11 @@ public class Tile : MonoBehaviour
 
     public void Click()
     {
+        Click(this.piece);
+    }
+
+    public void Click(ChessPiece piece) // TODO: figure out why the piece location doesn't lign up when a piece is clicked
+    {
         //if (GetComponent<MeshRenderer>().enabled == false)
         //    return;
         //deselect = true;
@@ -103,7 +108,7 @@ public class Tile : MonoBehaviour
             board.squares[str].piece = null;
             piece = GameMaster.selectedPiece;
             piece.location = location;
-            StartCoroutine(MoveTo(piece.gameObject, transform.position + Vector3.up * 0.5f, 0.2f));
+            StartCoroutine(MoveTo(piece.gameObject, transform.position + Vector3.up * 0.5f, 0.2f, piece));
             piece.hasMoved = true;
             GameMaster.instance.board.whiteTurn = !piece.white;
             GameMaster.instance.board.canMove = false;
@@ -130,8 +135,10 @@ public class Tile : MonoBehaviour
             else Debug.Log("This piece cannot move");
         }
     }
-    
-    IEnumerator MoveTo(GameObject item, Vector3 pos, float seconds)
+
+    public string console = "";
+
+    IEnumerator MoveTo(GameObject item, Vector3 pos, float seconds, ChessPiece piece)
     {
         //item.SetActive(true);
         //foreach (Collider col in ghost)
@@ -167,6 +174,11 @@ public class Tile : MonoBehaviour
         //piece.GetComponent<Rigidbody>().isKinematic = false;
         //piece.GetComponent<Rigidbody>().useGravity = true;
         item.GetComponent<ChessPiece>().movingTo = Vector3.zero;
+        if (GameMaster.bowling)
+        {
+            yield return new WaitForSecondsRealtime(0.5f);
+            board.UpdatePieceLocations();
+        }
     }
 
     IEnumerator AddToBoard()
