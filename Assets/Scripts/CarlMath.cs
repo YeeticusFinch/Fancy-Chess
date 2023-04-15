@@ -16,6 +16,26 @@ public class CarlMath : MonoBehaviour
     return result;
   }
 
+    public static List<int> halfway(List<int> a, List<int> b)
+    {
+        List<int> result = new List<int>();
+        for (int i = 0; i < Mathf.Min(a.Count, b.Count); i++)
+        {
+            result.Add(a[i] + (b[i] - a[i]) / 2);
+        }
+        return result;
+    }
+
+    public static float angleDiff(float a, float b)
+    {
+        return AbsMin(AbsMin((a % 360) - (b % 360), ((a % 360) + 360) - (b % 360)), (a % 360) - ((b % 360) + 360));
+    }
+
+    public static float AbsMod(float a, float b)
+    {
+        return Mathf.Sign(a) * Mathf.Sign(b) * (a % b);
+    }
+
     public static string ListAsString(List<int> l)
     {
         string result = ":";
@@ -45,5 +65,28 @@ public class CarlMath : MonoBehaviour
             if (a[i] != b[i])
                 return false;
         return true;
+    }
+
+    public static float AbsMin(float a, float b)
+    {
+        if (Mathf.Abs(a) < Mathf.Abs(b))
+            return a;
+        return b;
+    }
+
+    public static Vector3 MaxV(Vector3 a, Vector3 b)
+    {
+        if (a.magnitude > b.magnitude)
+            return a;
+        else return b;
+        //return new Vector3(Mathf.Max(a.x, b.x), Mathf.Max(a.y, b.y), Mathf.Max(a.z, b.z));
+    }
+
+    public static Vector3 MinV(Vector3 a, Vector3 b)
+    {
+        if (a.magnitude > b.magnitude)
+            return b;
+        else return a;
+        //return new Vector3(Mathf.Min(a.x, b.x), Mathf.Min(a.y, b.y), Mathf.Min(a.z, b.z));
     }
 }

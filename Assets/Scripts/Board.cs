@@ -3,8 +3,21 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
+[System.Serializable]
 public class Board : MonoBehaviour
 {
+    public int pieceSet = 0;
+
+    public string gameModeName = "Fancy Chess";
+    public string description = "Fancy description";
+
+    public int xAxis = 0;
+    public int yAxis = 1;
+    public int zAxis = -1;
+    public int xxAxis = -1;
+    public int yyAxis = -1;
+    public int zzAxis = -1;
+
     public LayerMask mask;
     public List<int> size = new List<int>();
     public List<int> dimensionsToMirror = new List<int>(); // when setting up the pieces on the board, mirror dimensions of these numbers
@@ -14,6 +27,7 @@ public class Board : MonoBehaviour
     public GameObject boardSquare;
     public Color colorA;
     public Color colorB;
+    public bool swapBlackAndWhite = false;
 
     [HideInInspector]
     public Dictionary<string, Tile> squares = new Dictionary<string, Tile>();
@@ -27,8 +41,17 @@ public class Board : MonoBehaviour
 
     public int groundLevel = 0;
 
+    public bool bowling = false;
+    public bool canabalism = false;
+    public bool winOnVIPKill = true;
+
+    public int whiteTurnsPerRound = 1;
+    public int blackTurnsPerRound = 1;
+
     public bool whiteTurn = true;
     public bool canMove = true;
+
+    public bool saveToJson = false;
 
     //public GameMaster gameMaster;
 
@@ -40,6 +63,8 @@ public class Board : MonoBehaviour
 
     public void Init()
     {
+        GameMaster.bowling = bowling;
+        GameMaster.canabalism = canabalism;
         InitBoard();
         InitDirections();
     }
@@ -92,6 +117,16 @@ public class Board : MonoBehaviour
         GameMaster.displayLoc = new List<int>(startIter);
         SpawnSquares(0, startIter);
         StartCoroutine(HideOtherDimensions());
+
+
+        GameMaster.displayDims = new int[] { xAxis, yAxis, zAxis, xxAxis, yyAxis, zzAxis };
+        GameMaster.instance.cam.GetComponent<MainCamera>().selectors[0].GetComponent<TextMesh>().text = "∇ [" + (xAxis == -1 ? "nil" : "" + (xAxis+1)) + "]";
+        GameMaster.instance.cam.GetComponent<MainCamera>().selectors[1].GetComponent<TextMesh>().text = "∇ [" + (yAxis == -1 ? "nil" : "" + (yAxis + 1)) + "]";
+        GameMaster.instance.cam.GetComponent<MainCamera>().selectors[2].GetComponent<TextMesh>().text = "∇ [" + (zAxis == -1 ? "nil" : "" + (zAxis + 1)) + "]";
+        GameMaster.instance.cam.GetComponent<MainCamera>().selectors[3].GetComponent<TextMesh>().text = "∇ [" + (xxAxis == -1 ? "nil" : "" + (xxAxis + 1)) + "]";
+        GameMaster.instance.cam.GetComponent<MainCamera>().selectors[4].GetComponent<TextMesh>().text = "∇ [" + (yyAxis == -1 ? "nil" : "" + (yyAxis + 1)) + "]";
+        GameMaster.instance.cam.GetComponent<MainCamera>().selectors[5].GetComponent<TextMesh>().text = "∇ [" + (zzAxis == -1 ? "nil" : "" + (zzAxis + 1)) + "]";
+        GameMaster.instance.board.UpdateDimensions();
     }
 
     IEnumerator HideOtherDimensions()
@@ -107,7 +142,7 @@ public class Board : MonoBehaviour
             bool hide = false;
             for (int i = 0; i < dimensions; i++)
             {
-                if (GameMaster.displayDims[0] != i && GameMaster.displayDims[1] != i && GameMaster.displayDims[2] != i && square.GetLocation()[i] != GameMaster.displayLoc[i])
+                if (GameMaster.displayDims[0] != i && GameMaster.displayDims[1] != i && GameMaster.displayDims[2] != i && GameMaster.displayDims[3] != i && GameMaster.displayDims[4] != i && GameMaster.displayDims[5] != i && square.GetLocation()[i] != GameMaster.displayLoc[i])
                     hide = true;
                 
 
@@ -133,12 +168,16 @@ public class Board : MonoBehaviour
             int dimX = GameMaster.displayDims[0];
             int dimY = GameMaster.displayDims[1];
             int dimZ = GameMaster.displayDims[2];
+            int dimXX = GameMaster.displayDims[3];
+            int dimYY = GameMaster.displayDims[4];
+            int dimZZ = GameMaster.displayDims[5];
             GameObject newTile = Instantiate(boardSquare, new Vector3(dimensions > 0 ? iter[dimX]-size[dimX]/2 + 0.5f : 0, dimensions > 2 ? 1.5f*(iter[dimZ]*2-size[dimZ]) : 0, dimensions > 1 ? iter[dimY]-size[dimY]/2 + 0.5f : 0), Quaternion.identity);
+            newTile.transform.position += new Vector3(dimensions > 3 ? (GameMaster.spaceBetweenX * size[dimX] * (iter[dimXX]-size[dimXX]/2 + 0.5f)) : 0, dimensions > 5 ? (GameMaster.spaceBetweenZ * size[dimZ]*(iter[dimZZ] - size[dimZZ] / 2 + 0.5f)) : 0, dimensions > 4 ? (GameMaster.spaceBetweenY * size[dimY] * (iter[dimYY] - size[dimYY] / 2 + 0.5f)) : 0);
             int evens = 0;
             bool hide = false;
             for (int i = 0; i < iter.Count; i++) {
                 evens += iter[i] % 2 == 0 ? 1 : 0;
-                if (GameMaster.displayDims[0] != i && GameMaster.displayDims[1] != i && GameMaster.displayDims[2] != i)
+                if (GameMaster.displayDims[0] != i && GameMaster.displayDims[1] != i && GameMaster.displayDims[2] != i && GameMaster.displayDims[3] != i && GameMaster.displayDims[4] != i && GameMaster.displayDims[5] != i)
                     hide = true;
             }
             if (evens % 2 != 0)
@@ -151,7 +190,7 @@ public class Board : MonoBehaviour
             }
             newTile.GetComponent<Tile>().SetLocation(new List<int>(iter));
             newTile.GetComponent<Tile>().board = this;
-            if (hide) ; // hide shit (maybe this should be done after the piece gets placed
+            //if (hide) ; // hide shit (maybe this should be done after the piece gets placed
             return;
         }
         for (int i = 0; i < size[index]; i++)
@@ -203,11 +242,14 @@ public class Board : MonoBehaviour
         int dimX = GameMaster.displayDims[0];
         int dimY = GameMaster.displayDims[1];
         int dimZ = GameMaster.displayDims[2];
+        int dimXX = GameMaster.displayDims[3];
+        int dimYY = GameMaster.displayDims[4];
+        int dimZZ = GameMaster.displayDims[5];
         foreach (Tile square in squares.Values)
         {
-            float xPos = (dimX == -1 ? 0 : square.GetLocation()[dimX] - size[dimX] / 2 + 0.5f);
-            float yPos = (dimY == -1 ? 0 : square.GetLocation()[dimY] - size[dimY] / 2 + 0.5f);
-            float zPos = (dimZ == -1 ? 0 : 1.5f * (square.GetLocation()[dimZ] * 2 - size[dimZ]));
+            float xPos = (dimX == -1 ? 0 : square.GetLocation()[dimX] - size[dimX] / 2 + 0.5f) + (dimXX == -1 ? 0 : size[dimX] * GameMaster.spaceBetweenX * square.GetLocation()[dimXX]);
+            float yPos = (dimY == -1 ? 0 : square.GetLocation()[dimY] - size[dimY] / 2 + 0.5f) + (dimYY == -1 ? 0 : size[dimY] * GameMaster.spaceBetweenY * square.GetLocation()[dimYY]);
+            float zPos = (dimZ == -1 ? 0 : 1.5f * (square.GetLocation()[dimZ] * 2 - size[dimZ]) + (dimZZ == -1 ? 0 : size[dimZ] * 1.5f * GameMaster.spaceBetweenZ * square.GetLocation()[dimZZ]));
             square.console += "\n\n---------\nxPos = " + xPos + ", yPos = " + yPos + ", zPos = " + zPos;
             bool skip = false;
             for (int i = 0; i < dimensions; i++)
@@ -237,10 +279,10 @@ public class Board : MonoBehaviour
                     {
                         if (CarlMath.equals(piece.GetComponent<ChessPiece>().location, square.GetLocation()))
                         {
-                            piece.GetComponent<MeshRenderer>().enabled = true;
-                            piece.GetComponent<BoxCollider>().enabled = true;
-                            piece.GetComponent<Rigidbody>().useGravity = true;
-                            piece.gameObject.layer = 0;
+                            piece.GetComponent<MeshRenderer>().enabled = false;
+                            piece.GetComponent<BoxCollider>().enabled = false;
+                            piece.GetComponent<Rigidbody>().useGravity = false;
+                            piece.gameObject.layer = 2;
                         }
                     }
                 }
@@ -260,7 +302,7 @@ public class Board : MonoBehaviour
                     //square.piece.gameObject.SetActive(true);
                     square.piece.GetComponent<MeshRenderer>().enabled = true;
                     square.piece.GetComponent<BoxCollider>().enabled = true;
-                    square.piece.GetComponent<Rigidbody>().useGravity = true;
+                    if (GameMaster.bowling) square.piece.GetComponent<Rigidbody>().useGravity = true;
                     square.piece.gameObject.layer = 0;
                 }
                 if (GameMaster.bowling)
@@ -272,13 +314,15 @@ public class Board : MonoBehaviour
                         {
                             piece.GetComponent<MeshRenderer>().enabled = true;
                             piece.GetComponent<BoxCollider>().enabled = true;
-                            piece.GetComponent<Rigidbody>().useGravity = true;
+                            if (GameMaster.bowling) piece.GetComponent<Rigidbody>().useGravity = true;
                             piece.gameObject.layer = 0;
                         }
                     }
                 }
             }
+            square.transform.localEulerAngles = Vector3.zero;
             square.transform.position = new Vector3(xPos, zPos, yPos);
+            if (dimZZ != -1) square.transform.RotateAround(new Vector3(size[dimX] / 2, size[dimZ] / 2, size[dimY] / 2), Vector3.up, 20 * square.GetLocation()[dimZZ]);
             if (square.piece != null)
                 square.piece.transform.position = square.transform.position;
         }
@@ -308,6 +352,40 @@ public class Board : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-       
+       if (saveToJson)
+       {
+            saveToJson = false;
+            string json = JsonUtility.ToJson(this);
+            FileIO.WriteString(json, "Assets" + System.IO.Path.DirectorySeparatorChar + "GameModes" + System.IO.Path.DirectorySeparatorChar + gameModeName.Replace(" ", "_") + ".json");
+            Debug.Log("Printing to " + gameModeName.Replace(" ", "_") + ".json");
+       }
+    }
+
+    public void loadFromFile(string path)
+    {
+        Board o = new Board();
+        JsonUtility.FromJsonOverwrite(FileIO.ReadString(path), o);
+        gameModeName = o.gameModeName;
+        xAxis = o.xAxis;
+        yAxis = o.yAxis;
+        zAxis = o.zAxis;
+        xxAxis = o.xxAxis;
+        yyAxis = o.yyAxis;
+        zzAxis = o.zzAxis;
+        mask = o.mask;
+        size = o.size;
+        dimensionsToMirror = o.dimensionsToMirror;
+        colorA = o.colorA;
+        colorB = o.colorB;
+        swapBlackAndWhite = o.swapBlackAndWhite;
+        groundLevel = o.groundLevel;
+        bowling = o.bowling;
+        canabalism = o.canabalism;
+        winOnVIPKill = o.winOnVIPKill;
+        whiteTurnsPerRound = o.whiteTurnsPerRound;
+        blackTurnsPerRound = o.blackTurnsPerRound;
+        whiteTurn = o.whiteTurn;
+        description = o.description;
+        pieceSet = o.pieceSet;
     }
 }

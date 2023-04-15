@@ -8,6 +8,8 @@ public class Tile : MonoBehaviour
     public ChessPiece piece;
     public GameObject underside;
     public Board board;
+    public TextMesh label;
+    public ChessPiece enPassant = null;
 
     public static bool deselect = false;
     private static bool deselecting = false;
@@ -45,7 +47,7 @@ public class Tile : MonoBehaviour
         //transform.localScale *= 0.5f;
         GetComponent<Renderer>().material.EnableKeyword("_EMISSION");
         GetComponent<Renderer>().material.SetColor("_EmissionColor", c);
-        GetComponent<Renderer>().material.SetColor("_Color", color/2);
+        GetComponent<Renderer>().material.SetColor("_Color", c);
         //DynamicGI.UpdateEnvironment();
     }
 
@@ -72,8 +74,31 @@ public class Tile : MonoBehaviour
             if (!deselecting)
                 StartCoroutine(Dedeselect());
         }
+        if (GameMaster.debug)
+        {
+            if (piece != null)
+            {
+                label.text = (piece.white ? "W " : "B ") + piece.type;
+            }
+            else
+            {
+                label.text = "";
+            }
+            if (ChessPiece.enPassantTile == this)
+            {
+                label.text += " ept";
+            }
+            if (enPassant != null)
+            {
+                label.text += " ep";
+            }
+            label.transform.eulerAngles = new Vector3(90, GameMaster.instance.cam.transform.eulerAngles.y, 0);
+        } else if (!GameMaster.debug && label.text != null && label.text.Length > 0)
+        {
+            label.text = "";
+        }
     }
-
+    
     IEnumerator Dedeselect()
     {
         deselecting = true;
@@ -85,6 +110,7 @@ public class Tile : MonoBehaviour
     public void Click()
     {
         Click(this.piece);
+        ChessPiece.enPassantTile = null;
     }
 
     public void Click(ChessPiece piece) // TODO: figure out why the piece location doesn't lign up when a piece is clicked
@@ -99,20 +125,48 @@ public class Tile : MonoBehaviour
         }
         GetComponent<Renderer>().material.SetColor("_Color", Color.red);
         clicked = Time.time + 0.1f;
+        if (GameMaster.rachel && piece != null)
+        {
+            piece.Die();
+            GameMaster.NoRachel();
+            return;
+        }
         if (GetComponent<Renderer>().material.GetColor("_EmissionColor").Equals(Color.green) && GameMaster.selectedPiece != null) // If true, move the piece over
         {
             //TO DO: check if this move puts you in check
-            Debug.Log("Moving the Piece!");
+            //Debug.Log("Moving the Piece!");
             List<int> oldLoc = GameMaster.selectedPiece.location;
             string str = CarlMath.ListAsString(oldLoc);
             board.squares[str].piece = null;
             piece = GameMaster.selectedPiece;
             piece.location = location;
-            StartCoroutine(MoveTo(piece.gameObject, transform.position + Vector3.up * 0.5f, 0.2f, piece));
+            if (ChessPiece.enPassantTile != null && ChessPiece.enPassantTile == this && piece != null && piece.type.Equals("pawn"))
+            {
+                board.squares[CarlMath.ListAsString(CarlMath.halfway(oldLoc, location))].enPassant = piece;
+                piece.enPassant = board.squares[CarlMath.ListAsString(CarlMath.halfway(oldLoc, location))];
+            }
+            else if (piece != null && piece.enPassant != null)
+            {
+                piece.enPassant.enPassant = null;
+                piece.enPassant = null;
+            }
+            StartCoroutine(MoveTo(piece.gameObject, transform.position + (GameMaster.bowling ? Vector3.up * 0.5f : Vector3.zero), 0.2f, piece));
             piece.hasMoved = true;
-            GameMaster.instance.board.whiteTurn = !piece.white;
-            GameMaster.instance.board.canMove = false;
+            if (!GameMaster.debug)
+            {
+                GameMaster.usedTurns++;
+                if (GameMaster.availableTurns() <= GameMaster.usedTurns)
+                {
+                    GameMaster.instance.board.whiteTurn = !piece.white;
+                    GameMaster.instance.board.canMove = false;
+                    GameMaster.usedTurns = 0;
+                }
+            }
             //piece.transform.position = transform.position;
+            //GetComponent<Renderer>().material.SetColor("_Color", color);
+            //ClearColor();
+            //clicked = 0;
+            //deselect = true;
         }
         if (piece != null && board.whiteTurn == piece.white)
         {
@@ -149,7 +203,7 @@ public class Tile : MonoBehaviour
         //piece.GetComponent<Rigidbody>().isKinematic = true;
         item.GetComponent<MeshRenderer>().enabled = true;
         item.GetComponent<BoxCollider>().enabled = true;
-        item.GetComponent<Rigidbody>().useGravity = true;
+        if (GameMaster.bowling) item.GetComponent<Rigidbody>().useGravity = true;
         float dist = (pos - item.transform.position).magnitude;
         float step = (pos - item.transform.position).magnitude / (seconds * 100);
         while ((pos - item.transform.position).magnitude > 0.03f && item.GetComponent<ChessPiece>().movingTo == pos && !(board.canMove && board.whiteTurn != item.GetComponent<ChessPiece>().white))
@@ -178,6 +232,16 @@ public class Tile : MonoBehaviour
         {
             yield return new WaitForSecondsRealtime(0.5f);
             board.UpdatePieceLocations();
+        } else
+        {
+            if (this.piece != null)
+                this.piece.Die();
+            if (enPassant != null && (enPassant.white != piece.white || GameMaster.canabalism))
+            {
+                enPassant.Die();
+                enPassant = null;
+            }
+            this.piece = piece;
         }
     }
 

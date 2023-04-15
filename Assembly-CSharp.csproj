@@ -65,8 +65,10 @@
     <Compile Include="Assets\Scripts\Board.cs" />
     <Compile Include="Assets\Scripts\CarlMath.cs" />
     <Compile Include="Assets\Scripts\ChessPiece.cs" />
+    <Compile Include="Assets\Scripts\FileIO.cs" />
     <Compile Include="Assets\Scripts\GameMaster.cs" />
     <Compile Include="Assets\Scripts\MainCamera.cs" />
+    <Compile Include="Assets\Scripts\PieceLibrary.cs" />
     <Compile Include="Assets\Scripts\Tile.cs" />
     <Compile Include="Assets\_MK\MKGlow\Components\Legacy\CameraDataLegacy.cs" />
     <Compile Include="Assets\_MK\MKGlow\Components\Legacy\MKGlow.cs" />

@@ -9,6 +9,7 @@ ScriptsOnlyBuild:
     - MK.Glow.Legacy.MKGlow
     - MK.Glow.Resources
     - MainCamera
+    - PieceLibrary
     - Tile
     Unity.Rider.Editor.dll:
     - Packages.Rider.Editor.UnitTesting.CallbackData
@@ -49,19 +50,21 @@ ScriptsOnlyBuild:
     - Class: 108
       Script: {instanceID: 0}
     - Class: 114
-      Script: {instanceID: 11546}
+      Script: {instanceID: 11650}
     - Class: 114
-      Script: {instanceID: 11946}
+      Script: {instanceID: 11878}
     - Class: 114
-      Script: {instanceID: 12214}
+      Script: {instanceID: 12058}
     - Class: 114
-      Script: {instanceID: 12378}
+      Script: {instanceID: 12084}
     - Class: 114
-      Script: {instanceID: 12834}
+      Script: {instanceID: 12344}
     - Class: 114
-      Script: {instanceID: 30408}
+      Script: {instanceID: 12508}
     - Class: 114
-      Script: {instanceID: 30448}
+      Script: {instanceID: 12976}
+    - Class: 114
+      Script: {instanceID: 13250}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 157
@@ -191,7 +194,7 @@ ScriptsOnlyBuild:
     className: SignalAsset
   - hash:
       serializedVersion: 2
-      Hash: 1563dac5c96792014c04de7962084ad3
+      Hash: 7051ecd7fb6d80d91d74526c3220922b
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: ChessPiece
@@ -251,6 +254,18 @@ ScriptsOnlyBuild:
     className: Shadow
   - hash:
       serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: FileIO
+  - hash:
+      serializedVersion: 2
+      Hash: 1cd57def02993750c189d30000e4d93e
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: MK.Glow.Legacy
+    className: MKGlow
+  - hash:
+      serializedVersion: 2
       Hash: cc4274b586df3c02688bac01b88bd16c
     assemblyName: UnityEngine.UI.dll
     namespaceName: UnityEngine.EventSystems
@@ -293,6 +308,12 @@ ScriptsOnlyBuild:
     className: GameMaster
   - hash:
       serializedVersion: 2
+      Hash: ebcfba0d6692d1a87cce3ec495dd88cd
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: PieceLibrary
+  - hash:
+      serializedVersion: 2
       Hash: d4020bafcd3ccbb5601a6e6c8ac78be0
     assemblyName: UnityEngine.UI.dll
     namespaceName: UnityEngine.UI
@@ -329,7 +350,7 @@ ScriptsOnlyBuild:
     className: Button
   - hash:
       serializedVersion: 2
-      Hash: 78e7692a394a6919a929d8ad45e874a7
+      Hash: c547ba87b60edc940527f99bc3f404d5
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: Board
@@ -347,7 +368,7 @@ ScriptsOnlyBuild:
     className: VerticalLayoutGroup
   - hash:
       serializedVersion: 2
-      Hash: 7cabd7f282af5b40124650aa9707b8d2
+      Hash: b0e92042b7063bf36044ae251f13bb2e
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: MainCamera
@@ -431,7 +452,7 @@ ScriptsOnlyBuild:
     className: MarkerTrack
   - hash:
       serializedVersion: 2
-      Hash: ed0e2f19dc93de2915c4b320d865afee
+      Hash: 615e77b48f0c11b2b16504c666676464
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: Tile
@@ -533,23 +554,17 @@ ScriptsOnlyBuild:
     className: ToggleGroup
   - hash:
       serializedVersion: 2
-      Hash: c3d3430df9e3ea95e3e3d587961390fb
-    assemblyName: Unity.Timeline.dll
-    namespaceName: UnityEngine.Timeline
-    className: PlayableTrack
-  - hash:
-      serializedVersion: 2
-      Hash: 1cd57def02993750c189d30000e4d93e
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: MK.Glow.Legacy
-    className: MKGlow
-  - hash:
-      serializedVersion: 2
       Hash: d8baadad6abe93ff071e9f12b8bf33f6
     assemblyName: Assembly-CSharp.dll
     namespaceName: MK.Glow
     className: Resources
+  - hash:
+      serializedVersion: 2
+      Hash: c3d3430df9e3ea95e3e3d587961390fb
+    assemblyName: Unity.Timeline.dll
+    namespaceName: UnityEngine.Timeline
+    className: PlayableTrack
   platform: 19
   scenePathNames:
   - Assets/Scenes/ChessScene.unity
-  playerPath: C:/Users/carlf/Desktop/n-dimensional-chess/Fancy Chess.exe
+  playerPath: C:/Users/carlf/Downloads/n-dimensional-chess/Fancy Chess.exe

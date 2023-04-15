@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class ChessPiece : MonoBehaviour
 {
+    public bool librarySpawn = false;
     public string type;
     public List<int> location;
     //public List<int> blackStartLocation;
@@ -141,38 +142,50 @@ public class ChessPiece : MonoBehaviour
 
     public void Init()
     {
-        GetComponent<Rigidbody>().useGravity = false;
-        GetComponent<MeshRenderer>().enabled = true;
-        GetComponent<Collider>().enabled = true;
-        if (timesMirrored > 0)
+        if (GameMaster.bowling)
         {
-            if (!arrayToMirrored)
-                location[mirror[timesMirrored - 1]] = board.size[mirror[timesMirrored - 1]] - 1 - location[mirror[timesMirrored - 1]];
+            //GetComponent<Collider>().isTrigger = false;
+            GetComponent<Rigidbody>().useGravity = true;
         } else
         {
-            if (board.size.Count > 2)
-            {
-                if (location.Count < 3) location.Add(0);
-                location[2] += board.groundLevel;
-            }
+            GetComponent<Collider>().isTrigger = true;
+            GetComponent<Rigidbody>().useGravity = false;
         }
-        if (mirror.Count > timesMirrored)
+        GetComponent<MeshRenderer>().enabled = true;
+        GetComponent<Collider>().enabled = true;
+        if (!librarySpawn)
         {
-            timesMirrored++;
-            if (arrayToMirrored)
+            if (timesMirrored > 0)
             {
-                for (int i = 1; i < board.size[mirror[timesMirrored - 1]]; i++)
-                {
-                    GameObject newPiece = Instantiate(gameObject);
-                    newPiece.GetComponent<ChessPiece>().location[mirror[timesMirrored - 1]] += i;
-                    Debug.Log("Spawning Clone " + newPiece.name);
-                    //newPiece.GetComponent<BoxCollider>().isTrigger = false;
-                    //newPiece.GetComponent<MeshRenderer>().enabled = true;
-                    //newPiece.GetComponent<Collider>().enabled = true;
-                }
+                if (!arrayToMirrored)
+                    location[mirror[timesMirrored - 1]] = board.size[mirror[timesMirrored - 1]] - 1 - location[mirror[timesMirrored - 1]];
             }
             else
-                Instantiate(gameObject);
+            {
+                if (board.size.Count > 2)
+                {
+                    if (location.Count < 3) location.Add(0);
+                    location[2] += board.groundLevel;
+                }
+            }
+            if (mirror.Count > timesMirrored)
+            {
+                timesMirrored++;
+                if (arrayToMirrored)
+                {
+                    for (int i = 1; i < board.size[mirror[timesMirrored - 1]]; i++)
+                    {
+                        GameObject newPiece = Instantiate(gameObject);
+                        newPiece.GetComponent<ChessPiece>().location[mirror[timesMirrored - 1]] += i;
+                        Debug.Log("Spawning Clone " + newPiece.name);
+                        //newPiece.GetComponent<BoxCollider>().isTrigger = false;
+                        //newPiece.GetComponent<MeshRenderer>().enabled = true;
+                        //newPiece.GetComponent<Collider>().enabled = true;
+                    }
+                }
+                else
+                    Instantiate(gameObject);
+            }
         }
         if (useMoveSets.Count > 0)
             foreach (string str in useMoveSets)
@@ -184,7 +197,7 @@ public class ChessPiece : MonoBehaviour
             location.Add(0);
         while (location.Count > board.size.Count)
             location.Remove(location.Count - 1);
-        if (!white)
+        if (!white != board.swapBlackAndWhite)
         {
             //if (blackStartLocation != null && blackStartLocation.Count > 0) location = blackStartLocation; // not needed for normal chess game
             for (int i = 0; i < board.size.Count; i++)
@@ -194,7 +207,8 @@ public class ChessPiece : MonoBehaviour
                     location[i] = board.size[i] - 1 - location[i];
             }
         }
-        StartCoroutine(Place());
+        if (!librarySpawn)
+            StartCoroutine(Place());
         if (name.ToLower().Equals("king") || name.ToLower().Equals("dabbaba"))
             vip = true;
     }
@@ -203,6 +217,14 @@ public class ChessPiece : MonoBehaviour
     public List<List<int>> GetMovableLocations()
     {
         List<List<int>> result = new List<List<int>>();
+        if (moves == null || moves.Count < 1)
+        {
+            if (useMoveSets.Count > 0)
+                foreach (string str in useMoveSets)
+                    if (moveSets.ContainsKey(str))
+                        foreach (Move m in moveSets[str])
+                            moves.Add(m);
+        }
         if (moves == null || moves.Count < 1) return null;
         Debug.Log("Calculating moves for " + type);
         foreach (Move m in moves)
@@ -298,6 +320,9 @@ public class ChessPiece : MonoBehaviour
         return addTo;
     }
 
+    public static Tile enPassantTile = null;
+    public Tile enPassant = null;
+
     // 0 = move allowed, no piece on square, CAN move further
     // 1 = move allowed, consumed piece on square, CANNOT move further
     // 2 = move allowed, consumed piece on square, or CAN move further
@@ -311,7 +336,18 @@ public class ChessPiece : MonoBehaviour
         ChessPiece piece = board.PieceAt(loc);
         if (piece == null)
         {
+            if (type.Equals("pawn") && m.onlyForConsume && board.squares[str].enPassant != null && (board.squares[str].enPassant.white != white || GameMaster.canabalism))
+            {
+                Debug.Log("En Passant Allowed at " + str);
+                board.squares[str].TempColor(Color.green);
+                addTo.Add(new List<int>(loc));
+                return 1;
+            }
             if (m.onlyForConsume) return 4;
+            if (type.Equals("pawn") && m.lateral == 2)
+            {
+                enPassantTile = board.squares[str];
+            }
             board.squares[str].TempColor(Color.green);
             addTo.Add(new List<int>(loc));
             return 0;
@@ -328,16 +364,22 @@ public class ChessPiece : MonoBehaviour
         return 3;
     }
 
+    public string getName()
+    {
+        return (white ? "White" : "Black") + " " + type;
+    }
+
     // Update is called once per frame
     void Update()
     {
         if (!GameMaster.gameRunning) return;
+        if (board == null) board = GameMaster.instance.board;
         if (board.canMove && (transform.forward - Vector3.up).magnitude < 0.1f)
         {
-            if (board.whiteTurn && Mathf.Abs(Mathf.Abs(transform.localEulerAngles.y) - 180) > 2)
-                transform.localEulerAngles += Vector3.forward * Mathf.Min(180 - transform.localEulerAngles.y, 2);
-            else if (!board.whiteTurn && Mathf.Abs(transform.localEulerAngles.y) > 2)
-                transform.localEulerAngles -= Vector3.forward * Mathf.Min(transform.localEulerAngles.y, 2);
+            if (board.whiteTurn && Mathf.Abs(Mathf.Abs(transform.localEulerAngles.y) - 180) > 4)
+                transform.localEulerAngles += Vector3.forward * Mathf.Min(180 - transform.localEulerAngles.y, 4);
+            else if (!board.whiteTurn && Mathf.Abs(transform.localEulerAngles.y) > 4)
+                transform.localEulerAngles -= Vector3.forward * Mathf.Min(transform.localEulerAngles.y, 4);
         }
         if (movingTo.Equals(Vector3.zero) && ignoredCollisions.Count > 0)
         {
@@ -352,24 +394,46 @@ public class ChessPiece : MonoBehaviour
             // if piece is below board, delete it
             if (transform.position.y < board.GetMinY()-5)
             {
-                if (GameMaster.instance.board.squares[CarlMath.ListAsString(location)].piece == this)
-                {
-                    GameMaster.instance.board.squares[CarlMath.ListAsString(location)].piece = null;
-                }
-                GameObject.Destroy(this.gameObject);
+                Die();
             }
 
         }
     }
 
-    IEnumerator Place()
+    public void Die()
+    {
+        if (vip && GameMaster.instance.board.winOnVIPKill)
+        {
+            if (white)
+            {
+                // Black wins!
+                GameMaster.winner = "BLACK";
+            } else
+            {
+                // White wins!
+                GameMaster.winner = "WHITE";
+            }
+        }
+        if (GameMaster.instance.board.squares[CarlMath.ListAsString(location)].piece == this)
+        {
+            GameMaster.instance.board.squares[CarlMath.ListAsString(location)].piece = null;
+        }
+        GameObject.Destroy(this.gameObject);
+    }
+
+    public IEnumerator Place()
     {
         yield return new WaitForSeconds(0.2f);
         string str = CarlMath.ListAsString(location);
         transform.position = board.squares[str].gameObject.transform.position+Vector3.up*0.05f;
+        if (GameMaster.bowling)
+        {
+            //if (GameMaster.instance.board.squares[str].piece != null)
+            //    board.squares[str].piece.Die();
+            GetComponent<Rigidbody>().useGravity = true;
+            GetComponent<BoxCollider>().isTrigger = false;
+        }
         board.squares[str].piece = this;
-        GetComponent<Rigidbody>().useGravity = true;
-        GetComponent<BoxCollider>().isTrigger = false;
     }
 
     void OnCollisionEnter(Collision collision)

@@ -67,7 +67,7 @@ Moves like a king, but with no backwards movement
 Moves forward as a bishop, and backwards as a rook
 #### Faro
 Can consume like a rook, but must jump over a piece for a non consuming move
-#### Flying Cock (this is legit from fairy chess, I’m not jocking)
+#### Flying Cock (this is legit from fairy chess, I’m not joking)
 Moves 1 square diagonally forward, or one square sideways
 #### Friend
 Moves like any friendly piece that is guarding it

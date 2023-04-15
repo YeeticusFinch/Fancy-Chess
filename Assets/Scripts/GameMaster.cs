@@ -7,9 +7,16 @@ public class GameMaster : MonoBehaviour
     public Camera cam;
     public Board board;
 
+    public static float spaceBetweenX = 1.4f;
+    public static float spaceBetweenY = 1.4f;
+    public static float spaceBetweenZ = 2.6f;
+
+    public static bool debug = false;
+    public static bool selectTileForNewPiece = false;
+
     public static ChessPiece selectedPiece = null;
 
-    public static bool canabalism = true;
+    public static bool canabalism = false;
     public static bool bowling = true;
 
     public static GameMaster instance;
@@ -19,11 +26,22 @@ public class GameMaster : MonoBehaviour
     public static bool gameRunning = false;
     public static bool gameStarted = false;
 
-    public static int[] displayDims = { 0, 1, 2 };
+    public static int[] displayDims = { 0, 1, 2, 3, 4, 5 };
     public static List<int> displayLoc = new List<int>();
+
+    public static int usedTurns = 0;
 
     public GameObject[] disableOnPlay;
     public GameObject[] enableOnPlay;
+
+    public static bool rachel = false;
+
+    public static string winner = null;
+
+    public static int availableTurns()
+    {
+        return instance.board.whiteTurn ? instance.board.whiteTurnsPerRound : instance.board.blackTurnsPerRound;
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -31,6 +49,23 @@ public class GameMaster : MonoBehaviour
         instance = this;
         foreach (GameObject o in enableOnPlay)
             o.SetActive(false);
+    }
+
+    public static void Rachel(TextMesh buttonText)
+    {
+        rachel = !rachel;
+        buttonText.color = !rachel ? new Color32(0, 255, 23, 255) : new Color32(255, 10, 10, 255);
+    }
+
+    public static void Rachel()
+    {
+        Rachel(GameObject.FindGameObjectWithTag("RachelButton").GetComponent<TextMesh>());
+    }
+
+    public static void NoRachel()
+    {
+        GameObject.FindGameObjectWithTag("RachelButton").GetComponent<TextMesh>().color = new Color32(0, 255, 23, 255);
+        rachel = false;
     }
     
     void FixedUpdate()

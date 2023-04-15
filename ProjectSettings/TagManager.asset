@@ -11,6 +11,20 @@ TagManager:
   - DownArrow
   - UpArrow
   - CameraMode
+  - ResetCamera
+  - MoveMode
+  - ChessPiecesArray
+  - UsedChessPiecesArray
+  - GameModeSelector
+  - DebugMode
+  - RachelButton
+  - ForceMove
+  - EndTurn
+  - SpawnPiece
+  - PieceDownArrow
+  - PieceUpArrow
+  - PlacePiece
+  - CamSwap
   layers:
   - Default
   - TransparentFX
