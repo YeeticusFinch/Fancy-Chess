@@ -240,6 +240,7 @@ MonoBehaviour:
   mirror: 
   timesMirrored: 0
   arrayToMirrored: 0
+  points: 4
   useMoveSets:
   - rook
   movingTo: {x: 0, y: 0, z: 0}
@@ -506,6 +507,7 @@ MonoBehaviour:
   mirror: 
   timesMirrored: 0
   arrayToMirrored: 0
+  points: 4
   useMoveSets:
   - rook
   movingTo: {x: 0, y: 0, z: 0}
@@ -665,6 +667,7 @@ MonoBehaviour:
   mirror: 
   timesMirrored: 0
   arrayToMirrored: 0
+  points: 3
   useMoveSets:
   - bishop
   movingTo: {x: 0, y: 0, z: 0}
@@ -1216,6 +1219,7 @@ MonoBehaviour:
   mirror: 
   timesMirrored: 0
   arrayToMirrored: 0
+  points: 5
   useMoveSets:
   - queen
   movingTo: {x: 0, y: 0, z: 0}
@@ -1597,6 +1601,7 @@ MonoBehaviour:
   mirror: 00000000
   timesMirrored: 0
   arrayToMirrored: 0
+  points: 3
   useMoveSets:
   - bishop
   movingTo: {x: 0, y: 0, z: 0}
@@ -1661,6 +1666,7 @@ MonoBehaviour:
   mirror: 00000000
   timesMirrored: 0
   arrayToMirrored: 0
+  points: 3
   useMoveSets:
   - bishop
   movingTo: {x: 0, y: 0, z: 0}
@@ -1826,6 +1832,7 @@ MonoBehaviour:
   mirror: 
   timesMirrored: 0
   arrayToMirrored: 0
+  points: 6
   useMoveSets:
   - king
   movingTo: {x: 0, y: 0, z: 0}
@@ -1980,6 +1987,7 @@ MonoBehaviour:
   mirror: 
   timesMirrored: 0
   arrayToMirrored: 0
+  points: 4
   useMoveSets:
   - princess
   movingTo: {x: 0, y: 0, z: 0}
@@ -2044,6 +2052,7 @@ MonoBehaviour:
   mirror: 00000000
   timesMirrored: 0
   arrayToMirrored: 0
+  points: 3
   useMoveSets:
   - bishop
   movingTo: {x: 0, y: 0, z: 0}
@@ -2230,6 +2239,7 @@ MonoBehaviour:
   mirror: 
   timesMirrored: 0
   arrayToMirrored: 0
+  points: 6
   useMoveSets:
   - king
   movingTo: {x: 0, y: 0, z: 0}
@@ -2390,6 +2400,7 @@ MonoBehaviour:
   mirror: 00000000
   timesMirrored: 0
   arrayToMirrored: 0
+  points: 4
   useMoveSets:
   - rook
   movingTo: {x: 0, y: 0, z: 0}
@@ -2539,6 +2550,7 @@ MonoBehaviour:
   mirror: 00000000
   timesMirrored: 0
   arrayToMirrored: 0
+  points: 2
   useMoveSets:
   - knight
   movingTo: {x: 0, y: 0, z: 0}
@@ -2609,6 +2621,7 @@ MonoBehaviour:
   mirror: 
   timesMirrored: 0
   arrayToMirrored: 0
+  points: 4
   useMoveSets:
   - princess
   movingTo: {x: 0, y: 0, z: 0}
@@ -2768,6 +2781,7 @@ MonoBehaviour:
   mirror: 00000000
   timesMirrored: 0
   arrayToMirrored: 1
+  points: 1
   useMoveSets:
   - pawn
   movingTo: {x: 0, y: 0, z: 0}
@@ -2922,6 +2936,7 @@ MonoBehaviour:
   mirror: 
   timesMirrored: 0
   arrayToMirrored: 0
+  points: 5
   useMoveSets:
   - queen
   movingTo: {x: 0, y: 0, z: 0}
@@ -3244,6 +3259,7 @@ MonoBehaviour:
   mirror: 
   timesMirrored: 0
   arrayToMirrored: 0
+  points: 5
   useMoveSets:
   - queen
   movingTo: {x: 0, y: 0, z: 0}
@@ -3615,6 +3631,7 @@ MonoBehaviour:
   mirror: 00000000
   timesMirrored: 0
   arrayToMirrored: 0
+  points: 2
   useMoveSets:
   - knight
   movingTo: {x: 0, y: 0, z: 0}
@@ -3679,6 +3696,7 @@ MonoBehaviour:
   mirror: 00000000
   timesMirrored: 0
   arrayToMirrored: 1
+  points: 1
   useMoveSets:
   - pawn
   movingTo: {x: 0, y: 0, z: 0}
@@ -3973,6 +3991,7 @@ MonoBehaviour:
   mirror: 
   timesMirrored: 0
   arrayToMirrored: 0
+  points: 5
   useMoveSets:
   - queen
   movingTo: {x: 0, y: 0, z: 0}
@@ -4083,6 +4102,7 @@ MonoBehaviour:
   mirror: 00000000
   timesMirrored: 0
   arrayToMirrored: 0
+  points: 4
   useMoveSets:
   - rook
   movingTo: {x: 0, y: 0, z: 0}
@@ -4248,6 +4268,7 @@ MonoBehaviour:
   mirror: 
   timesMirrored: 0
   arrayToMirrored: 0
+  points: 3
   useMoveSets:
   - bishop
   movingTo: {x: 0, y: 0, z: 0}
@@ -4915,6 +4936,7 @@ MonoBehaviour:
   mirror: 
   timesMirrored: 0
   arrayToMirrored: 0
+  points: 5
   useMoveSets:
   - queen
   movingTo: {x: 0, y: 0, z: 0}
@@ -5091,6 +5113,7 @@ MonoBehaviour:
   mirror: 00000000
   timesMirrored: 0
   arrayToMirrored: 0
+  points: 2
   useMoveSets:
   - knight
   movingTo: {x: 0, y: 0, z: 0}
@@ -5132,6 +5155,113 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!1 &790593433
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 790593434}
+  - component: {fileID: 790593437}
+  - component: {fileID: 790593436}
+  - component: {fileID: 790593435}
+  m_Layer: 0
+  m_Name: WhiteAI
+  m_TagString: WhiteAI
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &790593434
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 790593433}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 6.89, y: 0.73, z: 4.27}
+  m_LocalScale: {x: 1, y: 1.0000001, z: 1}
+  m_Children: []
+  m_Father: {fileID: 963194228}
+  m_RootOrder: 20
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!102 &790593435
+TextMesh:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 790593433}
+  m_Text: White AI = false
+  m_OffsetZ: 0
+  m_CharacterSize: 0.17
+  m_LineSpacing: 1
+  m_Anchor: 0
+  m_Alignment: 0
+  m_TabSize: 4
+  m_FontSize: 12
+  m_FontStyle: 0
+  m_RichText: 1
+  m_Font: {fileID: 0}
+  m_Color:
+    serializedVersion: 2
+    rgba: 4294967295
+--- !u!23 &790593436
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 790593433}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10100, guid: 0000000000000000e000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+--- !u!65 &790593437
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 790593433}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.6170282, y: 0.29551986, z: 0.20000005}
+  m_Center: {x: 0.7270794, y: -0.07682098, z: 0.0000009536743}
 --- !u!1001 &811576285
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5251,6 +5381,7 @@ MonoBehaviour:
   mirror: 00000000
   timesMirrored: 0
   arrayToMirrored: 0
+  points: 4
   useMoveSets:
   - rook
   movingTo: {x: 0, y: 0, z: 0}
@@ -5502,6 +5633,7 @@ MonoBehaviour:
   mirror: 00000000
   timesMirrored: 0
   arrayToMirrored: 1
+  points: 1
   useMoveSets:
   - pawn
   movingTo: {x: 0, y: 0, z: 0}
@@ -5986,6 +6118,7 @@ MonoBehaviour:
   mirror: 
   timesMirrored: 0
   arrayToMirrored: 0
+  points: 2
   useMoveSets:
   - knight
   movingTo: {x: 0, y: 0, z: 0}
@@ -6050,6 +6183,7 @@ MonoBehaviour:
   mirror: 00000000
   timesMirrored: 0
   arrayToMirrored: 0
+  points: 4
   useMoveSets:
   - rook
   movingTo: {x: 0, y: 0, z: 0}
@@ -6215,6 +6349,7 @@ MonoBehaviour:
   mirror: 00000000
   timesMirrored: 0
   arrayToMirrored: 0
+  points: 1
   useMoveSets:
   - pawn
   movingTo: {x: 0, y: 0, z: 0}
@@ -6479,6 +6614,7 @@ MonoBehaviour:
   mirror: 
   timesMirrored: 0
   arrayToMirrored: 0
+  points: 4
   useMoveSets:
   - princess
   movingTo: {x: 0, y: 0, z: 0}
@@ -6638,6 +6774,7 @@ MonoBehaviour:
   mirror: 00000000
   timesMirrored: 0
   arrayToMirrored: 1
+  points: 1
   useMoveSets:
   - pawn
   movingTo: {x: 0, y: 0, z: 0}
@@ -6881,6 +7018,7 @@ MonoBehaviour:
   mirror: 
   timesMirrored: 0
   arrayToMirrored: 0
+  points: 5
   useMoveSets:
   - queen
   movingTo: {x: 0, y: 0, z: 0}
@@ -7035,6 +7173,7 @@ MonoBehaviour:
   mirror: 
   timesMirrored: 0
   arrayToMirrored: 0
+  points: 6
   useMoveSets:
   - king
   movingTo: {x: 0, y: 0, z: 0}
@@ -7172,6 +7311,8 @@ Transform:
   - {fileID: 913153946}
   - {fileID: 163489578}
   - {fileID: 2067895247}
+  - {fileID: 1927730351}
+  - {fileID: 790593434}
   m_Father: {fileID: 1130472482}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
@@ -7668,6 +7809,7 @@ MonoBehaviour:
   mirror: 00000000
   timesMirrored: 0
   arrayToMirrored: 1
+  points: 1
   useMoveSets:
   - pawn
   movingTo: {x: 0, y: 0, z: 0}
@@ -7916,6 +8058,7 @@ MonoBehaviour:
   mirror: 
   timesMirrored: 0
   arrayToMirrored: 0
+  points: 3
   useMoveSets:
   - bishop
   movingTo: {x: 0, y: 0, z: 0}
@@ -8213,6 +8356,7 @@ MonoBehaviour:
   mirror: 00000000
   timesMirrored: 0
   arrayToMirrored: 0
+  points: 4
   useMoveSets:
   - rook
   movingTo: {x: 0, y: 0, z: 0}
@@ -8656,6 +8800,7 @@ MonoBehaviour:
   mirror: 
   timesMirrored: 0
   arrayToMirrored: 0
+  points: 6
   useMoveSets:
   - king
   movingTo: {x: 0, y: 0, z: 0}
@@ -8942,6 +9087,7 @@ MonoBehaviour:
   mirror: 
   timesMirrored: 0
   arrayToMirrored: 0
+  points: 6
   useMoveSets:
   - king
   movingTo: {x: 0, y: 0, z: 0}
@@ -9186,6 +9332,7 @@ MonoBehaviour:
   mirror: 
   timesMirrored: 0
   arrayToMirrored: 0
+  points: 6
   useMoveSets:
   - king
   movingTo: {x: 0, y: 0, z: 0}
@@ -9345,6 +9492,7 @@ MonoBehaviour:
   mirror: 00000000
   timesMirrored: 0
   arrayToMirrored: 1
+  points: 1
   useMoveSets:
   - pawn
   movingTo: {x: 0, y: 0, z: 0}
@@ -9499,6 +9647,7 @@ MonoBehaviour:
   mirror: 
   timesMirrored: 0
   arrayToMirrored: 0
+  points: 4
   useMoveSets:
   - princess
   movingTo: {x: 0, y: 0, z: 0}
@@ -9800,6 +9949,7 @@ MonoBehaviour:
   mirror: 00000000
   timesMirrored: 0
   arrayToMirrored: 0
+  points: 3
   useMoveSets:
   - bishop
   movingTo: {x: 0, y: 0, z: 0}
@@ -10186,6 +10336,7 @@ MonoBehaviour:
   mirror: 00000000
   timesMirrored: 0
   arrayToMirrored: 1
+  points: 1
   useMoveSets:
   - pawn
   movingTo: {x: 0, y: 0, z: 0}
@@ -10504,6 +10655,7 @@ MonoBehaviour:
   mirror: 
   timesMirrored: 0
   arrayToMirrored: 0
+  points: 4
   useMoveSets:
   - princess
   movingTo: {x: 0, y: 0, z: 0}
@@ -10658,6 +10810,7 @@ MonoBehaviour:
   mirror: 
   timesMirrored: 0
   arrayToMirrored: 0
+  points: 4
   useMoveSets:
   - rook
   movingTo: {x: 0, y: 0, z: 0}
@@ -10817,6 +10970,7 @@ MonoBehaviour:
   mirror: 00000000
   timesMirrored: 0
   arrayToMirrored: 0
+  points: 3
   useMoveSets:
   - bishop
   movingTo: {x: 0, y: 0, z: 0}
@@ -11138,6 +11292,7 @@ MonoBehaviour:
   mirror: 
   timesMirrored: 0
   arrayToMirrored: 0
+  points: 1
   useMoveSets:
   - pawn
   movingTo: {x: 0, y: 0, z: 0}
@@ -11287,6 +11442,7 @@ MonoBehaviour:
   mirror: 00000000
   timesMirrored: 0
   arrayToMirrored: 0
+  points: 2
   useMoveSets:
   - knight
   movingTo: {x: 0, y: 0, z: 0}
@@ -11430,6 +11586,7 @@ MonoBehaviour:
   mirror: 00000000
   timesMirrored: 0
   arrayToMirrored: 1
+  points: 1
   useMoveSets:
   - pawn
   movingTo: {x: 0, y: 0, z: 0}
@@ -11595,6 +11752,7 @@ MonoBehaviour:
   mirror: 
   timesMirrored: 0
   arrayToMirrored: 0
+  points: 3
   useMoveSets:
   - bishop
   movingTo: {x: 0, y: 0, z: 0}
@@ -11749,6 +11907,7 @@ MonoBehaviour:
   mirror: 
   timesMirrored: 0
   arrayToMirrored: 0
+  points: 4
   useMoveSets:
   - princess
   movingTo: {x: 0, y: 0, z: 0}
@@ -11898,6 +12057,7 @@ MonoBehaviour:
   mirror: 
   timesMirrored: 0
   arrayToMirrored: 0
+  points: 2
   useMoveSets:
   - knight
   movingTo: {x: 0, y: 0, z: 0}
@@ -11962,6 +12122,7 @@ MonoBehaviour:
   mirror: 
   timesMirrored: 0
   arrayToMirrored: 0
+  points: 5
   useMoveSets:
   - queen
   movingTo: {x: 0, y: 0, z: 0}
@@ -12268,6 +12429,7 @@ MonoBehaviour:
   mirror: 
   timesMirrored: 0
   arrayToMirrored: 0
+  points: 4
   useMoveSets:
   - princess
   movingTo: {x: 0, y: 0, z: 0}
@@ -12678,6 +12840,7 @@ MonoBehaviour:
   mirror: 
   timesMirrored: 0
   arrayToMirrored: 0
+  points: 6
   useMoveSets:
   - king
   movingTo: {x: 0, y: 0, z: 0}
@@ -12713,6 +12876,113 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!1 &1927730350
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1927730351}
+  - component: {fileID: 1927730354}
+  - component: {fileID: 1927730353}
+  - component: {fileID: 1927730352}
+  m_Layer: 0
+  m_Name: BlackAI
+  m_TagString: BlackAI
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1927730351
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1927730350}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 6.89, y: 1.05, z: 4.27}
+  m_LocalScale: {x: 1, y: 1.0000001, z: 1}
+  m_Children: []
+  m_Father: {fileID: 963194228}
+  m_RootOrder: 19
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!102 &1927730352
+TextMesh:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1927730350}
+  m_Text: Black AI = false
+  m_OffsetZ: 0
+  m_CharacterSize: 0.17
+  m_LineSpacing: 1
+  m_Anchor: 0
+  m_Alignment: 0
+  m_TabSize: 4
+  m_FontSize: 12
+  m_FontStyle: 0
+  m_RichText: 1
+  m_Font: {fileID: 0}
+  m_Color:
+    serializedVersion: 2
+    rgba: 4294967295
+--- !u!23 &1927730353
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1927730350}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10100, guid: 0000000000000000e000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+--- !u!65 &1927730354
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1927730350}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.6170282, y: 0.29551986, z: 0.20000005}
+  m_Center: {x: 0.7270794, y: -0.07682098, z: 0.0000009536743}
 --- !u!1001 &1928663176
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12832,6 +13102,7 @@ MonoBehaviour:
   mirror: 
   timesMirrored: 0
   arrayToMirrored: 0
+  points: 4
   useMoveSets:
   - rook
   movingTo: {x: 0, y: 0, z: 0}
@@ -13103,6 +13374,7 @@ MonoBehaviour:
   mirror: 00000000
   timesMirrored: 0
   arrayToMirrored: 1
+  points: 1
   useMoveSets:
   - pawn
   movingTo: {x: 0, y: 0, z: 0}
@@ -13733,6 +14005,7 @@ MonoBehaviour:
   mirror: 
   timesMirrored: 0
   arrayToMirrored: 0
+  points: 6
   useMoveSets:
   - king
   movingTo: {x: 0, y: 0, z: 0}
@@ -13909,6 +14182,7 @@ MonoBehaviour:
   mirror: 00000000
   timesMirrored: 0
   arrayToMirrored: 0
+  points: 2
   useMoveSets:
   - knight
   movingTo: {x: 0, y: 0, z: 0}

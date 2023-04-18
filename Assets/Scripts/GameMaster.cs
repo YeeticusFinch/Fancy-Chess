@@ -38,6 +38,9 @@ public class GameMaster : MonoBehaviour
 
     public static string winner = null;
 
+    public static bool whiteAI = false;
+    public static bool blackAI = false;
+
     public static int availableTurns()
     {
         return instance.board.whiteTurn ? instance.board.whiteTurnsPerRound : instance.board.blackTurnsPerRound;
@@ -67,12 +70,19 @@ public class GameMaster : MonoBehaviour
         GameObject.FindGameObjectWithTag("RachelButton").GetComponent<TextMesh>().color = new Color32(0, 255, 23, 255);
         rachel = false;
     }
+
+    public static bool pieceSpin = true;
     
     void FixedUpdate()
     {
         if (!gameRunning) return;
         else if (!gameStarted)
         {
+            if (whiteAI && blackAI)
+            {
+                cam.GetComponent<MainCamera>().camSwap = false;
+                pieceSpin = false;
+            }
             for (int i = 0; i < board.size.Count; i++)
                 displayLoc.Add(0);
             foreach (GameObject o in disableOnPlay)

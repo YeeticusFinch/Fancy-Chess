@@ -38,6 +38,7 @@ public class CarlMath : MonoBehaviour
 
     public static string ListAsString(List<int> l)
     {
+        if (l == null) return null;
         string result = ":";
         foreach (int i in l) result += i+":";
         return result;

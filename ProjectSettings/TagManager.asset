@@ -25,6 +25,8 @@ TagManager:
   - PieceUpArrow
   - PlacePiece
   - CamSwap
+  - BlackAI
+  - WhiteAI
   layers:
   - Default
   - TransparentFX

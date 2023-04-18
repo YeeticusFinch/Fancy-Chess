@@ -328,6 +328,38 @@ public class Board : MonoBehaviour
         }
     }
 
+    public Tile[] GetBestMove()
+    {
+        Debug.Log("Getting best move");
+        Tile[] result = { null, null };
+        int p = 0;
+
+        foreach (Tile t in squares.Values)
+        {
+            if (t.piece != null && t.piece.white == whiteTurn)
+            {
+                foreach (Tile square in squares.Values)
+                {
+                    if (!square.gameObject.Equals(gameObject))
+                        square.ClearColor();
+                }
+                Tile newT = t.piece.GetBestMove();
+                if (newT != null)
+                {
+                    int newP = newT.piece != null ? (newT.piece.points * (newT.piece.white != t.piece.white ? 1 : (GameMaster.bowling ? 0 : -1))) : 0;
+                    Debug.Log("newP = " + newP);
+                    if (result[0] == null || newP > p || (newP == p && Random.Range(0, Mathf.Max(1, squares.Count / 2)) == 0))
+                    {
+                        result[1] = newT;
+                        result[0] = t;
+                        p = newP;
+                    }
+                }
+            }
+        }
+
+        return result;
+    }
 
     /*
     void InitBoard()

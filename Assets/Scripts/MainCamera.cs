@@ -8,7 +8,7 @@ using System.IO;
 
 public class MainCamera : MonoBehaviour
 {
-    bool camSwap = true;
+    public bool camSwap = true;
 
     public GameObject[] pieceSets;
 
@@ -198,10 +198,22 @@ public class MainCamera : MonoBehaviour
                         pieceSets[GameMaster.instance.board.pieceSet].SetActive(true);
                         GameMaster.gameRunning = true;
                         foreach (GameObject o in GameObject.FindGameObjectsWithTag("GameModeSelector")) GameObject.Destroy(o);
+                        GameObject.FindGameObjectWithTag("BlackAI").transform.localPosition += Vector3.forward * 16.63f;
+                        GameObject.FindGameObjectWithTag("WhiteAI").transform.localPosition += Vector3.forward * 16.63f;
                     }
                     else if (hit.transform.gameObject.tag.Equals("GameModeSelector")) {
                         Debug.Log("Next game mode");
                         NextGameMode();
+                    }
+                    else if (hit.transform.gameObject.tag.Equals("WhiteAI"))
+                    {
+                        GameMaster.whiteAI = !GameMaster.whiteAI;
+                        hit.transform.gameObject.GetComponent<TextMesh>().text = "White AI = " + (GameMaster.whiteAI ? "true" : "false");
+                    }
+                    else if (hit.transform.gameObject.tag.Equals("BlackAI"))
+                    {
+                        GameMaster.blackAI = !GameMaster.blackAI;
+                        hit.transform.gameObject.GetComponent<TextMesh>().text = "Black AI = " + (GameMaster.blackAI ? "true" : "false");
                     }
                 }
             }
@@ -251,7 +263,11 @@ public class MainCamera : MonoBehaviour
                 transform.eulerAngles = new Vector3(rotX, rotY, 0);
             }
         }
-        if (Input.GetButtonDown("Fire1") && GameMaster.instance.board.canMove)
+        if ((GameMaster.instance.board.whiteTurn && GameMaster.whiteAI) || (!GameMaster.instance.board.whiteTurn && GameMaster.blackAI))
+        {
+            if (!AIMoving) StartCoroutine(AIMove());
+        }
+        if (Input.GetButtonDown("Fire1") && GameMaster.instance.board.canMove && ((GameMaster.instance.board.whiteTurn && !GameMaster.whiteAI) || (!GameMaster.instance.board.whiteTurn && !GameMaster.blackAI)))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
@@ -408,6 +424,16 @@ public class MainCamera : MonoBehaviour
                     GameObject.Destroy(libraryInstance);
                     newPieceSelectorText.GetComponent<RectTransform>().localScale = Vector3.zero;
                 }
+                else if (hit.transform.gameObject.tag.Equals("WhiteAI"))
+                {
+                    GameMaster.whiteAI = !GameMaster.whiteAI;
+                    hit.transform.gameObject.GetComponent<TextMesh>().text = "White AI = " + (GameMaster.whiteAI ? "true" : "false");
+                }
+                else if (hit.transform.gameObject.tag.Equals("BlackAI"))
+                {
+                    GameMaster.blackAI = !GameMaster.blackAI;
+                    hit.transform.gameObject.GetComponent<TextMesh>().text = "Black AI = " + (GameMaster.blackAI ? "true" : "false");
+                }
                 else if (hit.transform.gameObject.tag.Equals("MoveMode"))
                 {
                     orbiting = !orbiting;
@@ -464,6 +490,23 @@ public class MainCamera : MonoBehaviour
                 }
             }
         }
+    }
+
+    bool AIMoving = false;
+
+    IEnumerator AIMove()
+    {
+        AIMoving = true;
+        yield return new WaitForSecondsRealtime(GameMaster.pieceSpin ? 0.4f : 0.15f);
+        Tile[] bestMove = GameMaster.instance.board.GetBestMove();
+        if (bestMove != null && bestMove[0] != null && bestMove[1] != null)
+        {
+            bestMove[0].Click();
+            yield return new WaitForSecondsRealtime(GameMaster.pieceSpin ? 0.2f : 0.1f);
+            bestMove[1].Click();
+            yield return new WaitForSecondsRealtime(GameMaster.pieceSpin ? 0.2f : 0.1f);
+        }
+        AIMoving = false;
     }
     
     void BeginSelect(int sel)

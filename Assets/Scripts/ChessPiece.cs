@@ -18,6 +18,8 @@ public class ChessPiece : MonoBehaviour
     public int timesMirrored = 0;
     public bool arrayToMirrored = false;
 
+    public int points;
+
     public static Dictionary<string, Move[]> moveSets = new Dictionary<string, Move[]> {
         ["king"] = new Move[] { // check and checkmate needs to be hardcoded
             new Move(1),   // left right up down
@@ -213,9 +215,40 @@ public class ChessPiece : MonoBehaviour
             vip = true;
     }
 
+    List<Tile> movableLocations;
+
+    // Not really the best move, just the move with the highest immediate yield, else a random valid move
+    // Horrible chess AI, but let's be honest, nobody is good at 6 dimensional chess bowling
+    public Tile GetBestMove()
+    {
+        Tile result = null;
+        GetMovableLocations();
+        //Debug.Log(movableLocations);
+        //Debug.Log(movableLocations.Count);
+        int p = 0;
+        
+        foreach (Tile t in GameMaster.instance.board.squares.Values)
+        {
+            if (t.GetComponent<Renderer>().material.GetColor("_EmissionColor").Equals(Color.green))
+            {
+                //Debug.Log(CarlMath.ListAsString(l));
+                ChessPiece fancyPiece = t.piece;
+                int newP = fancyPiece != null ? (fancyPiece.white != white ? fancyPiece.points : (fancyPiece.points * (GameMaster.bowling ? 0 : -1))) : 0;
+                if (result == null || newP > p || (newP == p && Random.Range(0, Mathf.Max(1, movableLocations.Count / 2)) == 0))
+                {
+                    result = t;
+                    p = newP;
+                }
+            }
+        }
+
+        return result;
+    }
+
     // int lateral, int diagonal = 0, bool onlyForward = false, bool force = false, bool jump = false, bool canConsume = true, bool onlyForConsume = false, bool firstMove = false
     public List<List<int>> GetMovableLocations()
     {
+        movableLocations = new List<Tile>();
         List<List<int>> result = new List<List<int>>();
         if (moves == null || moves.Count < 1)
         {
@@ -272,18 +305,18 @@ public class ChessPiece : MonoBehaviour
                 }
             }
         }
-        return null;
+        return null; // idk what's the point of this lmao
     }
 
     // addTo = list to add moves to    m = current move,   startLoc = location to check from,   d = dimension,    step = iteration step (positive or negative)
     private List<List<int>> LatSlideCheck(List<List<int>> addTo, Move m, List<int> startLoc, int d, int step)
     {
         List<int> newLatLoc = new List<int>(startLoc);
-        Debug.Log("Lat Slide Check " + Random.Range(0, 100) + " : " + newLatLoc[0] + ", " + newLatLoc[1]);
+        //Debug.Log("Lat Slide Check " + Random.Range(0, 100) + " : " + newLatLoc[0] + ", " + newLatLoc[1]);
         while (newLatLoc[d]+step >= 0 && newLatLoc[d]+step < board.size[d] && (m.lateral == -1 || Mathf.Abs(newLatLoc[d] - location[d]) < m.lateral))
         {
             newLatLoc[d]+=step;
-            Debug.Log("LatLoop " + Random.Range(0, 100) + " : " + newLatLoc[0] + ", " + newLatLoc[1]);
+            //Debug.Log("LatLoop " + Random.Range(0, 100) + " : " + newLatLoc[0] + ", " + newLatLoc[1]);
             if (m.force && Mathf.Abs(newLatLoc[d] - location[d]) != m.lateral) continue;
             if (m.diagonal != 0)
             {
@@ -306,7 +339,7 @@ public class ChessPiece : MonoBehaviour
     // addTo = list to add moves to   m = current move,   startLoc = location to check form,   d = fixed component dimension,   dd = perpendicular dimension,   step = fixed component iteration step,   step2 = perpendicular iteration step
     private List<List<int>> DiaSlideCheck(List<List<int>> addTo, Move m, List<int> startLoc, int d, int dd, int step, int step2)
     {
-        Debug.Log("Dia Slide Check");
+        //Debug.Log("Dia Slide Check");
         List<int> newDiaLoc = new List<int>(startLoc);
         while (newDiaLoc[d]+step >= 0 && newDiaLoc[dd]+step2 >= 0 && newDiaLoc[d]+step < board.size[d] && newDiaLoc[dd]+step2 < board.size[dd] && (m.diagonal == -1 || Mathf.Abs(newDiaLoc[dd] - location[dd]) < m.diagonal))
         {
@@ -341,6 +374,8 @@ public class ChessPiece : MonoBehaviour
                 Debug.Log("En Passant Allowed at " + str);
                 board.squares[str].TempColor(Color.green);
                 addTo.Add(new List<int>(loc));
+                movableLocations.Add(board.squares[str]);
+                Debug.Log("added move to moveable locations");
                 return 1;
             }
             if (m.onlyForConsume) return 4;
@@ -350,12 +385,16 @@ public class ChessPiece : MonoBehaviour
             }
             board.squares[str].TempColor(Color.green);
             addTo.Add(new List<int>(loc));
+            movableLocations.Add(board.squares[str]);
+            Debug.Log("added move to moveable locations");
             return 0;
         }
         if ((piece.white != white || GameMaster.canabalism) && (m.canConsume || m.onlyForConsume))
         {
             board.squares[str].TempColor(Color.green);
             addTo.Add(new List<int>(loc));
+            movableLocations.Add(board.squares[str]);
+            Debug.Log("added move to moveable locations");
             if (m.jump) return 2;
             return 1;
         }
@@ -374,7 +413,7 @@ public class ChessPiece : MonoBehaviour
     {
         if (!GameMaster.gameRunning) return;
         if (board == null) board = GameMaster.instance.board;
-        if (board.canMove && (transform.forward - Vector3.up).magnitude < 0.1f)
+        if (board.canMove && (transform.forward - Vector3.up).magnitude < 0.1f && GameMaster.pieceSpin)
         {
             if (board.whiteTurn && Mathf.Abs(Mathf.Abs(transform.localEulerAngles.y) - 180) > 4)
                 transform.localEulerAngles += Vector3.forward * Mathf.Min(180 - transform.localEulerAngles.y, 4);
