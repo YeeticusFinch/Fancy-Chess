@@ -8,6 +8,9 @@ Ok not really, it's just an attempt at a chess implementation scalable in all di
 
 https://user-images.githubusercontent.com/50182007/181196062-011c88f9-8bdd-4526-a894-afa5dd40b4aa.mov
 
+### Alpha test in 6D:
+
+https://github.com/YeeticusFinch/Fancy-Chess/assets/50182007/57c369a1-dd1a-42a6-9464-70d5a1c7314a
 
 ### Alpha test in 3D:
 
